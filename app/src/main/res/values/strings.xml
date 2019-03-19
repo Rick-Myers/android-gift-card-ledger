@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Gift Card Ledger</string>
     <string name="action_settings">Settings</string>
+    <string name="name">Name</string>
+    <string name="balance">Balance</string>
+    <string name="history">History</string>
 </resources>
