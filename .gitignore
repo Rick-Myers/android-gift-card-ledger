@@ -63,3 +63,13 @@ fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
+.idea/
+app/src/test/java/com/rickmyers/giftcardledger/ExampleUnitTest.java
+gradle/
+build.gradle
+gradlew.bat
+gradlew
+gradle.properties
+app/proguard-rules.pro
+app/.gitignore
+settings.gradle
