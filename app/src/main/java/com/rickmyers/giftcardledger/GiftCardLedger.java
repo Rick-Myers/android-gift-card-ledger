@@ -10,16 +10,16 @@ public class GiftCardLedger {
     private static GiftCardLedger sGiftCardLedger;
     private List<GiftCard> mGiftCardList;
 
-    public static GiftCardLedger get(Context context){
-        if (sGiftCardLedger == null){
+    public static GiftCardLedger get(Context context) {
+        if (sGiftCardLedger == null) {
             sGiftCardLedger = new GiftCardLedger(context);
         }
         return sGiftCardLedger;
     }
 
-    private GiftCardLedger(Context context){
+    private GiftCardLedger(Context context) {
         mGiftCardList = new ArrayList<>();
-        for (int i = 0; i < 100; i++){
+        for (int i = 0; i < 100; i++) {
             GiftCard tempCard = new GiftCard();
             tempCard.setName("Card Test #" + i);
             tempCard.setBalance(10.00f);
@@ -31,9 +31,9 @@ public class GiftCardLedger {
         return mGiftCardList;
     }
 
-    public GiftCard getGiftCard(UUID id){
-        for (GiftCard card : mGiftCardList){
-            if (card.getId().equals(id)){
+    public GiftCard getGiftCard(UUID id) {
+        for (GiftCard card : mGiftCardList) {
+            if (card.getId().equals(id)) {
                 return card;
             }
         }

@@ -1,8 +1,10 @@
 package com.rickmyers.giftcardledger;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -47,14 +48,15 @@ public class GiftCardListFragment extends Fragment {
         private GiftCard mGiftCard;
         private static final String TAG = "GiftCardHolder";
 
-        public GiftCardHolder(LayoutInflater inflater, ViewGroup parent){
+        public GiftCardHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_card, parent, false));
             itemView.setOnClickListener(this);
 
             mNameTextView = itemView.findViewById(R.id.card_name);
             mBalanceTextView = itemView.findViewById(R.id.card_balance);
         }
-        public void bind(GiftCard card){
+
+        public void bind(GiftCard card) {
             mGiftCard = card;
             mNameTextView.setText(mGiftCard.getName());
             mBalanceTextView.setText(Float.toString(mGiftCard.getBalance()));
@@ -62,14 +64,16 @@ public class GiftCardListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(getActivity(), mGiftCard.getName() + " clicked!", Toast.LENGTH_SHORT).show();
+            //Intent intent = new Intent(getActivity(), GiftCardEditActivity.class);
+            Intent intent = GiftCardEditActivity.newIntent(getActivity(), mGiftCard.getId());
+            startActivity(intent);
         }
     }
 
     private class GiftCardAdapter extends RecyclerView.Adapter<GiftCardHolder> {
         private List<GiftCard> mGiftCards;
 
-        public GiftCardAdapter(List<GiftCard> cards){
+        public GiftCardAdapter(List<GiftCard> cards) {
             mGiftCards = cards;
         }
 
