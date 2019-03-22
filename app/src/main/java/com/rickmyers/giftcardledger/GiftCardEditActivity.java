@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class GiftCardEditActivity extends SingleFragmentActivity {
 
-    public static final String EXTRA_CARD_ID = "com.rickmyers.giftcardledger.card_id";
+    private static final String EXTRA_CARD_ID = "com.rickmyers.giftcardledger.card_id";
 
     public static Intent newIntent(Context packageContext, UUID cardID){
         Intent intent = new Intent(packageContext, GiftCardEditActivity.class);
@@ -20,6 +20,7 @@ public class GiftCardEditActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        return new GiftCardEditFragment();
+        UUID cardId = (UUID) getIntent().getSerializableExtra(EXTRA_CARD_ID);
+        return GiftCardEditFragment.newInstance(cardId);
     }
 }

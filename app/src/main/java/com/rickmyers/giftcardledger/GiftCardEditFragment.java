@@ -5,22 +5,29 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.UUID;
 
 public class GiftCardEditFragment extends Fragment {
+
+    private static final String ARG_CARD_ID = "card_id";
+
     private TextView mNameTextView;
     private TextView mBalanceTextView;
+    private EditText mBalanceEditText;
     private GiftCard mGiftCard;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        UUID cardID = (UUID) getActivity().getIntent().getSerializableExtra(GiftCardEditActivity.EXTRA_CARD_ID);
+        UUID cardID = (UUID) getArguments().getSerializable(ARG_CARD_ID);
         mGiftCard = GiftCardLedger.get(getActivity()).getGiftCard(cardID);
     }
 
@@ -30,12 +37,44 @@ public class GiftCardEditFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_edit_card, container, false);
 
         mNameTextView = view.findViewById(R.id.card_name);
-        mBalanceTextView = view.findViewById(R.id.card_balance);
-
         mNameTextView.setText(mGiftCard.getName());
+
+        mBalanceTextView = view.findViewById(R.id.card_balance);
         mBalanceTextView.setText(Float.toString(mGiftCard.getBalance()));
 
+        mBalanceEditText = view.findViewById(R.id.card_balance_edit);
+        mBalanceEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0)
+                    mGiftCard.setBalance(Float.parseFloat(s.toString()));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
+
+        mBalanceEditText.setText(Float.toString(mGiftCard.getBalance()));
+
         return view;
+    }
+
+    public static GiftCardEditFragment newInstance(UUID cardID){
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_CARD_ID, cardID);
+
+        GiftCardEditFragment fragment = new GiftCardEditFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
 

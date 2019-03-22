@@ -19,6 +19,7 @@ import java.util.List;
 public class GiftCardListFragment extends Fragment {
     private RecyclerView mCardRecyclerView;
     private GiftCardAdapter mAdapter;
+    private int mLastUpdatedIndex = -1;
 
     @Nullable
     @Override
@@ -37,8 +38,25 @@ public class GiftCardListFragment extends Fragment {
         GiftCardLedger giftCardLedger = GiftCardLedger.get(getActivity());
         List<GiftCard> giftCards = giftCardLedger.getGiftCardList();
 
-        mAdapter = new GiftCardAdapter(giftCards);
-        mCardRecyclerView.setAdapter(mAdapter);
+        if (mAdapter == null){
+            mAdapter = new GiftCardAdapter(giftCards);
+            mCardRecyclerView.setAdapter(mAdapter);
+        } else {
+            if (mLastUpdatedIndex > -1){
+                mAdapter.notifyItemChanged(mLastUpdatedIndex);
+                mLastUpdatedIndex = -1;
+            } else {
+                mAdapter.notifyDataSetChanged();
+            }
+
+        }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUI();
     }
 
     private class GiftCardHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -66,6 +84,7 @@ public class GiftCardListFragment extends Fragment {
         public void onClick(View v) {
             //Intent intent = new Intent(getActivity(), GiftCardEditActivity.class);
             Intent intent = GiftCardEditActivity.newIntent(getActivity(), mGiftCard.getId());
+            mLastUpdatedIndex = this.getAdapterPosition();
             startActivity(intent);
         }
     }

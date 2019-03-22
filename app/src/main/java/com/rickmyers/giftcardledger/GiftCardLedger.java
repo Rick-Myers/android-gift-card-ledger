@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public class GiftCardLedger {
     private static GiftCardLedger sGiftCardLedger;
+    // todo Think about using LinkedHashMap
     private List<GiftCard> mGiftCardList;
 
     public static GiftCardLedger get(Context context) {
