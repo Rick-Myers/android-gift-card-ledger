@@ -51,13 +51,15 @@ public class GiftCardEditFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0)
-                    mGiftCard.setBalance(Float.parseFloat(s.toString()));
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                if (s.length() > 0)
+                    mGiftCard.setBalance(Float.parseFloat(s.toString()));
+                else
+                    mGiftCard.setBalance(0.00f);
             }
         });
 
