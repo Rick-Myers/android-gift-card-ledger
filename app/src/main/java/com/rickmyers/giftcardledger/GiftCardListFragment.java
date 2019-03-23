@@ -45,6 +45,9 @@ public class GiftCardListFragment extends Fragment {
             if (mLastUpdatedIndex > -1){
                 mAdapter.notifyItemChanged(mLastUpdatedIndex);
                 mLastUpdatedIndex = -1;
+                // todo This is lazy! Implement a way to update a list of items that were changed coming back to list activity.
+
+                mAdapter.notifyDataSetChanged();
             } else {
                 mAdapter.notifyDataSetChanged();
             }
@@ -83,7 +86,7 @@ public class GiftCardListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             //Intent intent = new Intent(getActivity(), GiftCardEditActivity.class);
-            Intent intent = GiftCardEditActivity.newIntent(getActivity(), mGiftCard.getId());
+            Intent intent = GiftCardPagerActivity.newIntent(getActivity(), mGiftCard.getId());
             mLastUpdatedIndex = this.getAdapterPosition();
             startActivity(intent);
         }
