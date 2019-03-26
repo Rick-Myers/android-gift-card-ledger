@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public class GiftCardEditFragment extends Fragment {
@@ -40,7 +41,7 @@ public class GiftCardEditFragment extends Fragment {
         mNameTextView.setText(mGiftCard.getName());
 
         mBalanceTextView = view.findViewById(R.id.card_balance);
-        mBalanceTextView.setText(Float.toString(mGiftCard.getBalance()));
+        mBalanceTextView.setText(GiftCard.getFormattedBalance(mGiftCard.getBalance()));
 
         mBalanceEditText = view.findViewById(R.id.card_balance_edit);
         mBalanceEditText.addTextChangedListener(new TextWatcher() {
@@ -57,15 +58,15 @@ public class GiftCardEditFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > 0)
-                    mGiftCard.setBalance(Float.parseFloat(s.toString()));
+                    mGiftCard.setBalance(new BigDecimal(s.toString()));
                 else
-                    mGiftCard.setBalance(0.00f);
+                    mGiftCard.setBalance(new BigDecimal(0));
             }
         });
 
 
 
-        mBalanceEditText.setText(Float.toString(mGiftCard.getBalance()));
+        mBalanceEditText.setText(mGiftCard.getBalance().toString());
 
         return view;
     }

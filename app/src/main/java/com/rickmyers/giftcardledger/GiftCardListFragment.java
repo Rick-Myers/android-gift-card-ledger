@@ -80,7 +80,7 @@ public class GiftCardListFragment extends Fragment {
         public void bind(GiftCard card) {
             mGiftCard = card;
             mNameTextView.setText(mGiftCard.getName());
-            mBalanceTextView.setText(Float.toString(mGiftCard.getBalance()));
+            mBalanceTextView.setText(GiftCard.getFormattedBalance(mGiftCard.getBalance()));
         }
 
         @Override

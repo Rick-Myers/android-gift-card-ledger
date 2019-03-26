@@ -1,7 +1,10 @@
 package com.rickmyers.giftcardledger;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 public class GiftCard {
@@ -11,7 +14,7 @@ public class GiftCard {
     private List<String> history;
     private Date mStartDate;
     private int mNumber;
-    private float mBalance, mStartBalance;
+    private BigDecimal mBalance, mStartBalance;
 
 
     public GiftCard() {
@@ -47,19 +50,25 @@ public class GiftCard {
         mNumber = number;
     }
 
-    public float getBalance() {
+    public BigDecimal getBalance() {
         return mBalance;
     }
 
-    public void setBalance(float balance) {
+    public void setBalance(BigDecimal balance) {
         mBalance = balance;
     }
 
-    public float getStartBalance() {
+    public BigDecimal getStartBalance() {
         return mStartBalance;
     }
 
-    public void setStartBalance(float startBalance) {
+    public void setStartBalance(BigDecimal startBalance) {
         mStartBalance = startBalance;
+    }
+
+    public static String getFormattedBalance(BigDecimal balance){
+        Locale locale = new Locale("en", "US");
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
+        return currencyFormatter.format(balance);
     }
 }

@@ -2,6 +2,7 @@ package com.rickmyers.giftcardledger;
 
 import android.content.Context;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -34,7 +35,7 @@ public class GiftCardLedger {
         for (int i = 0; i < 100; i++){
             GiftCard tempCard = new GiftCard();
             tempCard.setName("Card Test #" + i);
-            tempCard.setBalance(23.45f);
+            tempCard.setBalance(new BigDecimal(25.00));
             mGiftCardHashMap.put(tempCard.getId(), tempCard);
         }
     }

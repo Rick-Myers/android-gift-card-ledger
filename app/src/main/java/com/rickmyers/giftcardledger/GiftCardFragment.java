@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import java.math.BigDecimal;
+
 /**
  * todo Validate input! Be careful at the moment, input is not validated and will crash the app!
  */
@@ -60,7 +62,7 @@ public class GiftCardFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mGiftCard.setBalance(Float.parseFloat(s.toString()));
+                mGiftCard.setBalance(new BigDecimal(s.toString()));
             }
 
             @Override
