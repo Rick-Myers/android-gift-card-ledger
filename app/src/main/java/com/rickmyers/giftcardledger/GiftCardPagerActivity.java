@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -15,19 +16,21 @@ import java.util.UUID;
 
 public class GiftCardPagerActivity extends AppCompatActivity {
 
-    private static final String EXTRA_CRIME_ID = "com.rickmyers.giftcardledger.card_id";
+    private static final String EXTRA_CARD_ID = "com.rickmyers.giftcardledger.card_id";
 
     private ViewPager mViewPager;
     private List<GiftCard> mGiftCards;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_card_pager);
+        setContentView(R.layout.activity_card_pager);//activity_card_pager_old);
 
-        UUID cardID = (UUID) getIntent().getSerializableExtra(EXTRA_CRIME_ID);
+        UUID cardID = (UUID) getIntent().getSerializableExtra(EXTRA_CARD_ID);
 
-        mViewPager = findViewById(R.id.card_view_pager);
+        fab = findViewById(R.id.fab);
+        mViewPager = findViewById(R.id.card_view_pagers);
 
         mGiftCards = GiftCardLedger.get(this).getGiftCardList();
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -44,6 +47,14 @@ public class GiftCardPagerActivity extends AppCompatActivity {
             }
         });
 
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                fab.hide();;
+            }
+        });
+
         for (int i = 0; i < mGiftCards.size(); i++) {
             if (mGiftCards.get(i).getId().equals(cardID)){
                 mViewPager.setCurrentItem(i);
@@ -54,7 +65,7 @@ public class GiftCardPagerActivity extends AppCompatActivity {
     }
     public static Intent newIntent(Context packageContext, UUID cardID){
         Intent intent = new Intent(packageContext, GiftCardPagerActivity.class);
-        intent.putExtra(EXTRA_CRIME_ID, cardID);
+        intent.putExtra(EXTRA_CARD_ID, cardID);
         return intent;
     }
 }

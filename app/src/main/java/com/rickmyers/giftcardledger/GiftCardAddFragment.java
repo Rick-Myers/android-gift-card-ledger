@@ -1,10 +1,11 @@
 package com.rickmyers.giftcardledger;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +17,14 @@ import java.math.BigDecimal;
  * todo Validate input! Be careful at the moment, input is not validated and will crash the app!
  */
 
-public class GiftCardFragment extends Fragment {
+public class GiftCardAddFragment extends Fragment {
 
     private GiftCard mGiftCard;
-    private static final String TAG = "GiftCardFragment";
+    private static final String TAG = "GiftCardAddFragment";
     private EditText mName;
     private EditText mBalance;
     private EditText mNumber;
+    private FloatingActionButton fab;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,7 +35,17 @@ public class GiftCardFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_card, container, false);
+        View v = inflater.inflate(R.layout.fragment_add_card, container, false);
+
+        fab = v.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, "I love you Janello!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
 
         mName = v.findViewById(R.id.card_name);
         mName.addTextChangedListener(new TextWatcher() {

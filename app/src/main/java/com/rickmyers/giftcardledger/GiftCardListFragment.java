@@ -8,7 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +27,17 @@ public class GiftCardListFragment extends Fragment {
 
         mCardRecyclerView = view.findViewById(R.id.card_recycler_view);
         mCardRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        FloatingActionButton fab = view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), GiftCardAddActivity.class);
+                startActivity(intent);
+                /*Snackbar.make(view, "I love you Janello!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
+            }
+        });
 
         updateUI();
 
@@ -85,7 +95,6 @@ public class GiftCardListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            //Intent intent = new Intent(getActivity(), GiftCardEditActivity.class);
             Intent intent = GiftCardPagerActivity.newIntent(getActivity(), mGiftCard.getId());
             mLastUpdatedIndex = this.getAdapterPosition();
             startActivity(intent);

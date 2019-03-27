@@ -7,6 +7,6 @@ public class GiftCardAddActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        return new GiftCardFragment();
+        return new GiftCardAddFragment();
     }
 }
