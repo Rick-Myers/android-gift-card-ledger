@@ -37,7 +37,7 @@ public class GiftCardAddFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_add_card, container, false);
 
-        fab = v.findViewById(R.id.fab);
+        fab = getActivity().findViewById(R.id.fab);//v.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

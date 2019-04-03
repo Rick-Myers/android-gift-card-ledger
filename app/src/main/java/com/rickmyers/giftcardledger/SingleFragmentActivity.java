@@ -18,14 +18,14 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.single_frame_layout);
+        setContentView(R.layout.fragment_main);//single_frame_layout);
 
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
         if (fragment == null) {
             fragment = createFragment();
             fm.beginTransaction()
-                    .add(R.id.single_frame_container, fragment)
+                    .add(R.id.fragment_container, fragment)
                     .commit();
         }
     }

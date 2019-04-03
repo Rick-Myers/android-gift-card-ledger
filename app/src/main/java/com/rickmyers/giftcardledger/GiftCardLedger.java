@@ -11,7 +11,6 @@ import java.util.UUID;
 
 public class GiftCardLedger {
     private static GiftCardLedger sGiftCardLedger;
-    // todo Think about using LinkedHashMap
     private List<GiftCard> mGiftCardList;
     private Map<UUID, GiftCard> mGiftCardHashMap;
 
@@ -32,7 +31,7 @@ public class GiftCardLedger {
 //        }
 
         mGiftCardHashMap = new LinkedHashMap<>();
-        for (int i = 0; i < 100; i++){
+        for (int i = 0; i < 10; i++){
             GiftCard tempCard = new GiftCard();
             tempCard.setName("Card Test #" + i);
             tempCard.setBalance(new BigDecimal(25.00));
@@ -54,5 +53,11 @@ public class GiftCardLedger {
         return null;*/
 
         return mGiftCardHashMap.get(id);
+    }
+
+    public GiftCard removeGiftCard(UUID id){
+        GiftCard test = mGiftCardHashMap.remove(id);
+
+        return test;
     }
 }
