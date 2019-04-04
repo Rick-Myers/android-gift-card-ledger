@@ -22,14 +22,6 @@ public class GiftCardLedger {
     }
 
     private GiftCardLedger(Context context) {
-//        mGiftCardList = new ArrayList<>();
-//        for (int i = 0; i < 100; i++) {
-//            GiftCard tempCard = new GiftCard();
-//            tempCard.setName("Card Test #" + i);
-//            tempCard.setBalance(10.00f);
-//            mGiftCardList.add(tempCard);
-//        }
-
         mGiftCardHashMap = new LinkedHashMap<>();
         /*for (int i = 0; i < 10; i++){
             GiftCard tempCard = new GiftCard();

@@ -42,6 +42,7 @@ public class GiftCardEditFragment extends Fragment {
         mNameTextView = view.findViewById(R.id.card_name);
         mNameTextView.setText(mGiftCard.getName());
 
+
         mBalanceEditText = view.findViewById(R.id.card_balance_edit);
         mBalanceEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -79,6 +80,5 @@ public class GiftCardEditFragment extends Fragment {
         return fragment;
     }
 
-    //
 
 }

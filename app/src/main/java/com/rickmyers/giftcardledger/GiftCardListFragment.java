@@ -26,6 +26,7 @@ import java.util.UUID;
 public class GiftCardListFragment extends Fragment {
     private static final String TAG = "GiftCardListFragment";
     private static final int REQUEST_DELETE = 0;
+    private static final int REQUEST_ADD = 1;
 
 
     private RecyclerView mCardRecyclerView;
@@ -74,12 +75,11 @@ public class GiftCardListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.new_card:
+                // todo change this so that new cards aren't added unless the user adds it!
                 GiftCard newCard = new GiftCard();
-                newCard.setBalance(new BigDecimal(25.00));
-                newCard.setName("Card Test A");
                 GiftCardLedger.get(getActivity()).addCard(newCard);
-                Intent intent = new Intent(getActivity(), GiftCardAddActivity.class);
-                startActivity(intent);
+                Intent intent = GiftCardAddActivity.newIntent(getActivity(), newCard.getId());
+                startActivityForResult(intent, REQUEST_ADD);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -111,16 +111,27 @@ public class GiftCardListFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != Activity.RESULT_OK){
+        Log.d(TAG, "Request: " + requestCode + "Result: " + resultCode);
+        /*if (resultCode != Activity.RESULT_OK){
             return;
-        }
+        }*/
 
         if (requestCode == REQUEST_DELETE){
             UUID id = (UUID) data.getSerializableExtra(DeleteCardFragment.EXTRA_DELETE);
-            Log.d(TAG, "onActivityResult");
+            Log.d(TAG, "onActivityResult - Delete");
             mGiftCardLedger.removeGiftCard(id);
             mAdapter.updateList();
             mAdapter.notifyDataSetChanged();
+        }
+
+        if (requestCode == REQUEST_ADD){
+            Log.d(TAG, "onActivityResult - Add");
+            if (resultCode == Activity.RESULT_OK) {
+                UUID id = (UUID) data.getSerializableExtra(GiftCardAddFragment.EXTRA_ADD);
+                mAdapter.updateList();
+                mAdapter.notifyDataSetChanged();
+            }
+
         }
 
         super.onActivityResult(requestCode, resultCode, data);
