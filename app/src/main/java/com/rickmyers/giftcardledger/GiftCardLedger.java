@@ -31,27 +31,23 @@ public class GiftCardLedger {
 //        }
 
         mGiftCardHashMap = new LinkedHashMap<>();
-        for (int i = 0; i < 10; i++){
+        /*for (int i = 0; i < 10; i++){
             GiftCard tempCard = new GiftCard();
             tempCard.setName("Card Test #" + i);
             tempCard.setBalance(new BigDecimal(25.00));
             mGiftCardHashMap.put(tempCard.getId(), tempCard);
-        }
+        }*/
+    }
+
+    public void addCard(GiftCard card){
+        mGiftCardHashMap.put(card.getId(), card);
     }
 
     public List<GiftCard> getGiftCardList() {
-        //return mGiftCardList;
         return new ArrayList<>(mGiftCardHashMap.values());
     }
 
     public GiftCard getGiftCard(UUID id) {
-        /*for (GiftCard card : mGiftCardList) {
-            if (card.getId().equals(id)) {
-                return card;
-            }
-        }
-        return null;*/
-
         return mGiftCardHashMap.get(id);
     }
 

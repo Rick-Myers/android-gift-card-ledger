@@ -32,15 +32,21 @@ public class DeleteCardFragment  extends AppCompatDialogFragment {
         GiftCard card = mGiftCardLedger.getGiftCard(mId);
 
         return new AlertDialog.Builder(getActivity())
-                .setTitle(R.string.card_balance_label)
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                .setTitle(R.string.card_delete_question)
+                .setPositiveButton(R.string.ok_button, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                         sendResult(Activity.RESULT_OK, mId);
                     }
                 })
-                .create();//super.onCreateDialog(savedInstanceState);
+                .setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sendResult(Activity.RESULT_CANCELED, mId);
+                    }
+                })
+                .create();
     }
 
     private void sendResult(int resultCode, UUID id){

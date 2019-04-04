@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,17 +20,18 @@ public class GiftCardPagerActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
     private List<GiftCard> mGiftCards;
-    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_card_pager);//activity_card_pager_old);
+        setContentView(R.layout.activity_card_pager);
 
         UUID cardID = (UUID) getIntent().getSerializableExtra(EXTRA_CARD_ID);
 
-        fab = findViewById(R.id.fab);
         mViewPager = findViewById(R.id.card_view_pagers);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         mGiftCards = GiftCardLedger.get(this).getGiftCardList();
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -51,7 +52,6 @@ public class GiftCardPagerActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                fab.hide();;
             }
         });
 

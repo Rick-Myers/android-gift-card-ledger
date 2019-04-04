@@ -12,10 +12,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +32,12 @@ public class GiftCardListFragment extends Fragment {
     private GiftCardAdapter mAdapter;
     private int mLastUpdatedIndex = -1;
     private GiftCardLedger mGiftCardLedger;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Nullable
     @Override
@@ -52,6 +62,28 @@ public class GiftCardListFragment extends Fragment {
         updateUI();
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.new_card:
+                GiftCard newCard = new GiftCard();
+                newCard.setBalance(new BigDecimal(25.00));
+                newCard.setName("Card Test A");
+                GiftCardLedger.get(getActivity()).addCard(newCard);
+                Intent intent = new Intent(getActivity(), GiftCardAddActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void updateUI() {
@@ -141,9 +173,6 @@ public class GiftCardListFragment extends Fragment {
             DeleteCardFragment dialog = DeleteCardFragment.newInstance(mGiftCard.getId());
             dialog.setTargetFragment(GiftCardListFragment.this, REQUEST_DELETE);
             dialog.show(manager, DIALOG_DELETE);
-            /*mGiftCardLedger.removeGiftCard(mGiftCard.getId());
-            mCardAdapter.updateList();
-            mCardAdapter.notifyDataSetChanged();*/
             return true;
         }
     }

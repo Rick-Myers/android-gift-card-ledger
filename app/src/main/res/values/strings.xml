@@ -8,5 +8,12 @@
     <string name="card_history_label">History</string>
     <string name="card_number_label">Number</string>
     <string name="card_number_hint">Enter the gift card number.</string>
+    <string name="card_delete_question">Delete?</string>
+    <string name="ok_button">Ok</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="new_card">New Card</string>
+    <string name="show_subtitle">Show Subtitle</string>
+    <string name="hide_subtitle">Hide Subtitle</string>
+    <string name="subtitle_format">%1$d cards</string>
 
 </resources>

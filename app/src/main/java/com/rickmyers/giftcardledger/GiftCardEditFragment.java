@@ -25,7 +25,6 @@ public class GiftCardEditFragment extends Fragment {
     private TextView mNameTextView;
     private EditText mBalanceEditText;
     private GiftCard mGiftCard;
-    private FloatingActionButton fab;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,15 +39,6 @@ public class GiftCardEditFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_edit_card, container, false);
 
         final String text = mGiftCard.getName();
-        fab = view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, text, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         mNameTextView = view.findViewById(R.id.card_name);
         mNameTextView.setText(mGiftCard.getName());
 
