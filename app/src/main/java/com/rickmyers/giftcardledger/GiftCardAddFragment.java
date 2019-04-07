@@ -6,9 +6,15 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -36,14 +42,19 @@ public class GiftCardAddFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        UUID cardID = (UUID) getArguments().getSerializable(ARG_CARD_ID);
-        mGiftCard = GiftCardLedger.get(getActivity()).getGiftCard(cardID);
+
+
+        //UUID cardID = (UUID) getArguments().getSerializable(ARG_CARD_ID);
+        //mGiftCard = GiftCardLedger.get(getActivity()).getGiftCard(cardID);
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_add_card, container, false);
+
+
+
 
         mName = v.findViewById(R.id.card_name);
         mBalance = v.findViewById(R.id.card_balance);
@@ -53,12 +64,14 @@ public class GiftCardAddFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mBalance.getText().length() > 0 && mName.getText() != null) {
-                    mGiftCard.setBalance(new BigDecimal(mBalance.getText().toString()));
-                    mGiftCard.setName(mName.getText().toString());
+                    GiftCard newCard = new GiftCard();
+                    GiftCardLedger.get(getActivity()).addCard(newCard);
+                    newCard.setBalance(new BigDecimal(mBalance.getText().toString()));
+                    newCard.setName(mName.getText().toString());
 
 
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra(EXTRA_ADD, mGiftCard.getId());
+                    returnIntent.putExtra(EXTRA_ADD, newCard.getId());
                     getActivity().setResult(Activity.RESULT_OK, returnIntent);
 
                     //sendResult(getActivity().RESULT_OK, mGiftCard.getId());
@@ -104,25 +117,18 @@ public class GiftCardAddFragment extends Fragment {
             }
         });
 
-        mNumber = v.findViewById(R.id.card_number);
-        mNumber.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //mGiftCard.setNumber(Integer.parseInt(s.toString()));
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
         return v;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     public static GiftCardAddFragment newInstance(UUID cardID){

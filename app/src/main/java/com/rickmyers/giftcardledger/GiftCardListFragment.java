@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,12 +29,15 @@ public class GiftCardListFragment extends Fragment {
     private static final String TAG = "GiftCardListFragment";
     private static final int REQUEST_DELETE = 0;
     private static final int REQUEST_ADD = 1;
+    private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
 
 
     private RecyclerView mCardRecyclerView;
     private GiftCardAdapter mAdapter;
     private int mLastUpdatedIndex = -1;
     private GiftCardLedger mGiftCardLedger;
+    private boolean mSubtitleVisible;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,12 +58,14 @@ public class GiftCardListFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), GiftCardAddActivity.class);
-                startActivity(intent);
-                /*Snackbar.make(view, "I love you Janello!", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
+                Snackbar.make(view, "I love you Janello!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
+
+        if (savedInstanceState != null){
+            mSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
+        }
 
         updateUI();
 
@@ -66,24 +73,52 @@ public class GiftCardListFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(SAVED_SUBTITLE_VISIBLE, mSubtitleVisible);
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_main, menu);
+
+        MenuItem subtitleItem = menu.findItem(R.id.show_subtitle);
+        if (mSubtitleVisible){
+            subtitleItem.setTitle(R.string.hide_subtitle);
+        } else {
+            subtitleItem.setTitle(R.string.show_subtitle);
+        }
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.new_card:
-                // todo change this so that new cards aren't added unless the user adds it!
-                GiftCard newCard = new GiftCard();
-                GiftCardLedger.get(getActivity()).addCard(newCard);
-                Intent intent = GiftCardAddActivity.newIntent(getActivity(), newCard.getId());
+                Intent intent = new Intent(getActivity(), GiftCardAddActivity.class);
                 startActivityForResult(intent, REQUEST_ADD);
+                return true;
+            case R.id.show_subtitle:
+                mSubtitleVisible = !mSubtitleVisible;
+                getActivity().invalidateOptionsMenu();
+                updateSubtitle();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void updateSubtitle(){
+        int cardCount = mGiftCardLedger.getGiftCardList().size();
+        String subtitle = getString(R.string.subtitle_format, cardCount);
+
+        if (!mSubtitleVisible){
+            subtitle = null;
+        }
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.getSupportActionBar().setSubtitle(subtitle);
     }
 
     private void updateUI() {
@@ -106,6 +141,8 @@ public class GiftCardListFragment extends Fragment {
             }
 
         }
+
+        updateSubtitle();
 
     }
 
