@@ -120,7 +120,7 @@ public class GiftCardListFragment extends Fragment {
 
     private void updateSubtitle(){
         int cardCount = mGiftCardLedger.getGiftCardList().size();
-        String subtitle = getString(R.string.subtitle_format, cardCount);
+        String subtitle = getResources().getQuantityString(R.plurals.subtitle_plural, cardCount, cardCount);
 
         if (!mSubtitleVisible){
             subtitle = null;

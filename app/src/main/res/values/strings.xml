@@ -14,7 +14,12 @@
     <string name="new_card">New Card</string>
     <string name="show_subtitle">Show Subtitle</string>
     <string name="hide_subtitle">Hide Subtitle</string>
-    <string name="subtitle_format">%1$d cards</string>
+
     <string name="no_data_available">Add a gift card!</string>
+
+    <plurals name="subtitle_plural">
+        <item quantity="one">%1$d card</item>
+        <item quantity="other">%1$d cards</item>
+    </plurals>
 
 </resources>
