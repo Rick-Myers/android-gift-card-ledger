@@ -37,12 +37,15 @@ public class GiftCardListFragment extends Fragment {
     private int mLastUpdatedIndex = -1;
     private GiftCardLedger mGiftCardLedger;
     private boolean mSubtitleVisible;
+    private TextView mEmptyView;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+
     }
 
     @Nullable
@@ -52,6 +55,12 @@ public class GiftCardListFragment extends Fragment {
 
         mCardRecyclerView = view.findViewById(R.id.card_recycler_view);
         mCardRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mEmptyView = view.findViewById(R.id.empty_view);
+
+
+
+
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
         fab = getActivity().findViewById(R.id.fab);
@@ -142,6 +151,15 @@ public class GiftCardListFragment extends Fragment {
 
         }
 
+        if (mGiftCardLedger.getGiftCardList().isEmpty()){
+            mCardRecyclerView.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.VISIBLE);
+        }
+        else {
+            mCardRecyclerView.setVisibility(View.VISIBLE);
+            mEmptyView.setVisibility(View.GONE);
+        }
+
         updateSubtitle();
 
     }
@@ -159,6 +177,7 @@ public class GiftCardListFragment extends Fragment {
             mGiftCardLedger.removeGiftCard(id);
             mAdapter.updateList();
             mAdapter.notifyDataSetChanged();
+            updateUI();
         }
 
         if (requestCode == REQUEST_ADD){
