@@ -80,5 +80,10 @@ public class GiftCardEditFragment extends Fragment {
         return fragment;
     }
 
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        // todo Does card need to be saved every time or only on update? Validate first?
+        GiftCardLedger.get(getActivity()).updateGiftCard(mGiftCard);
+    }
 }

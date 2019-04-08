@@ -65,9 +65,10 @@ public class GiftCardAddFragment extends Fragment {
             public void onClick(View v) {
                 if (mBalance.getText().length() > 0 && mName.getText() != null) {
                     GiftCard newCard = new GiftCard();
-                    GiftCardLedger.get(getActivity()).addCard(newCard);
                     newCard.setBalance(new BigDecimal(mBalance.getText().toString()));
                     newCard.setName(mName.getText().toString());
+                    GiftCardLedger.get(getActivity()).addCard(newCard);
+
 
 
                     Intent returnIntent = new Intent();

@@ -141,7 +141,7 @@ public class GiftCardListFragment extends Fragment {
             if (mLastUpdatedIndex > -1){
                 mAdapter.notifyItemChanged(mLastUpdatedIndex);
                 mLastUpdatedIndex = -1;
-                mAdapter.updateList();
+                mAdapter.updateList(giftCards);
                 // todo This is lazy! Implement a way to update a list of items that were changed coming back to list activity.
 
                 mAdapter.notifyDataSetChanged();
@@ -167,6 +167,7 @@ public class GiftCardListFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "Request: " + requestCode + "Result: " + resultCode);
+        List<GiftCard> giftCards = mGiftCardLedger.getGiftCardList();
         /*if (resultCode != Activity.RESULT_OK){
             return;
         }*/
@@ -175,7 +176,7 @@ public class GiftCardListFragment extends Fragment {
             UUID id = (UUID) data.getSerializableExtra(DeleteCardFragment.EXTRA_DELETE);
             Log.d(TAG, "onActivityResult - Delete");
             mGiftCardLedger.removeGiftCard(id);
-            mAdapter.updateList();
+            mAdapter.updateList(giftCards);
             mAdapter.notifyDataSetChanged();
             updateUI();
         }
@@ -184,7 +185,7 @@ public class GiftCardListFragment extends Fragment {
             Log.d(TAG, "onActivityResult - Add");
             if (resultCode == Activity.RESULT_OK) {
                 UUID id = (UUID) data.getSerializableExtra(GiftCardAddFragment.EXTRA_ADD);
-                mAdapter.updateList();
+                mAdapter.updateList(giftCards);
                 mAdapter.notifyDataSetChanged();
             }
 
@@ -269,8 +270,8 @@ public class GiftCardListFragment extends Fragment {
             return mGiftCards.size();
         }
 
-        public void updateList(){
-            mGiftCards = mGiftCardLedger.getGiftCardList();
+        public void updateList(List<GiftCard> cards){
+            mGiftCards = cards;
         }
     }
 

@@ -1,5 +1,7 @@
 package com.rickmyers.giftcardledger;
 
+import android.database.Cursor;
+
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Date;
@@ -18,7 +20,11 @@ public class GiftCard {
 
 
     public GiftCard() {
-        this.mId = UUID.randomUUID();
+        this(UUID.randomUUID());
+    }
+
+    public GiftCard(UUID id){
+        mId = id;
         mStartDate = new Date();
     }
 
@@ -71,4 +77,6 @@ public class GiftCard {
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
         return currencyFormatter.format(balance);
     }
+
+
 }
