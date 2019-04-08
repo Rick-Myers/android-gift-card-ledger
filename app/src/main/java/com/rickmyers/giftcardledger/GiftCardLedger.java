@@ -31,7 +31,7 @@ public class GiftCardLedger {
     }
 
     private GiftCardLedger(Context context) {
-        mGiftCardHashMap = new LinkedHashMap<>();
+        //mGiftCardHashMap = new LinkedHashMap<>();
         mContext = context.getApplicationContext();
         mDatabase = new GiftCardDBHelper(mContext).getWritableDatabase();
         /*for (int i = 0; i < 10; i++){
@@ -43,7 +43,7 @@ public class GiftCardLedger {
     }
 
     public void addCard(GiftCard card){
-        mGiftCardHashMap.put(card.getId(), card);
+        //mGiftCardHashMap.put(card.getId(), card);
 
         //---
         ContentValues values = getContentValues(card);
@@ -73,7 +73,7 @@ public class GiftCardLedger {
 
     public GiftCard getGiftCard(UUID id) {
         GiftCardCursorWrapper cursor = queryGiftCards(
-                GiftCardTable.Cols.UUID + " + ?",
+                GiftCardTable.Cols.UUID + " = ?",
                 new String[] { id.toString() }
         );
 
@@ -86,14 +86,10 @@ public class GiftCardLedger {
         } finally {
             cursor.close();
         }
-
-        //return mGiftCardHashMap.get(id);
     }
 
-    public GiftCard removeGiftCard(UUID id){
-        GiftCard test = mGiftCardHashMap.remove(id);
-
-        return test;
+    public void removeGiftCard(UUID id){
+        mDatabase.delete(GiftCardTable.NAME, GiftCardTable.Cols.UUID + " = ?", new String[] { id.toString() });
     }
 
     public void updateGiftCard(GiftCard card){

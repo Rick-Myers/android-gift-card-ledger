@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,8 +43,6 @@ public class GiftCardListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
-
     }
 
     @Nullable
@@ -59,9 +56,6 @@ public class GiftCardListFragment extends Fragment {
         mEmptyView = view.findViewById(R.id.empty_view);
 
 
-
-
-
         FloatingActionButton fab = view.findViewById(R.id.fab);
         fab = getActivity().findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +66,7 @@ public class GiftCardListFragment extends Fragment {
             }
         });
 
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             mSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
         }
 
@@ -93,7 +87,7 @@ public class GiftCardListFragment extends Fragment {
         inflater.inflate(R.menu.menu_main, menu);
 
         MenuItem subtitleItem = menu.findItem(R.id.show_subtitle);
-        if (mSubtitleVisible){
+        if (mSubtitleVisible) {
             subtitleItem.setTitle(R.string.hide_subtitle);
         } else {
             subtitleItem.setTitle(R.string.show_subtitle);
@@ -103,7 +97,7 @@ public class GiftCardListFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.new_card:
                 Intent intent = new Intent(getActivity(), GiftCardAddActivity.class);
                 startActivityForResult(intent, REQUEST_ADD);
@@ -118,11 +112,11 @@ public class GiftCardListFragment extends Fragment {
         }
     }
 
-    private void updateSubtitle(){
+    private void updateSubtitle() {
         int cardCount = mGiftCardLedger.getGiftCardList().size();
         String subtitle = getResources().getQuantityString(R.plurals.subtitle_plural, cardCount, cardCount);
 
-        if (!mSubtitleVisible){
+        if (!mSubtitleVisible) {
             subtitle = null;
         }
 
@@ -134,11 +128,11 @@ public class GiftCardListFragment extends Fragment {
         mGiftCardLedger = GiftCardLedger.get(getActivity());
         List<GiftCard> giftCards = mGiftCardLedger.getGiftCardList();
 
-        if (mAdapter == null){
+        if (mAdapter == null) {
             mAdapter = new GiftCardAdapter(giftCards);
             mCardRecyclerView.setAdapter(mAdapter);
         } else {
-            if (mLastUpdatedIndex > -1){
+            if (mLastUpdatedIndex > -1) {
                 mAdapter.notifyItemChanged(mLastUpdatedIndex);
                 mLastUpdatedIndex = -1;
                 mAdapter.updateList(giftCards);
@@ -151,11 +145,10 @@ public class GiftCardListFragment extends Fragment {
 
         }
 
-        if (mGiftCardLedger.getGiftCardList().isEmpty()){
+        if (mGiftCardLedger.getGiftCardList().isEmpty()) {
             mCardRecyclerView.setVisibility(View.GONE);
             mEmptyView.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             mCardRecyclerView.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
         }
@@ -167,21 +160,21 @@ public class GiftCardListFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "Request: " + requestCode + "Result: " + resultCode);
-        List<GiftCard> giftCards = mGiftCardLedger.getGiftCardList();
-        /*if (resultCode != Activity.RESULT_OK){
-            return;
-        }*/
 
-        if (requestCode == REQUEST_DELETE){
-            UUID id = (UUID) data.getSerializableExtra(DeleteCardFragment.EXTRA_DELETE);
-            Log.d(TAG, "onActivityResult - Delete");
-            mGiftCardLedger.removeGiftCard(id);
-            mAdapter.updateList(giftCards);
-            mAdapter.notifyDataSetChanged();
-            updateUI();
+        if (requestCode == REQUEST_DELETE) {
+            if (resultCode == Activity.RESULT_OK) {
+                UUID id = (UUID) data.getSerializableExtra(DeleteCardFragment.EXTRA_DELETE);
+                Log.d(TAG, "onActivityResult - Delete");
+                mGiftCardLedger.removeGiftCard(id);
+                List<GiftCard> giftCards = mGiftCardLedger.getGiftCardList();
+                mAdapter.updateList(giftCards);
+                mAdapter.notifyDataSetChanged();
+                updateUI();
+            }
         }
 
-        if (requestCode == REQUEST_ADD){
+        if (requestCode == REQUEST_ADD) {
+            List<GiftCard> giftCards = mGiftCardLedger.getGiftCardList();
             Log.d(TAG, "onActivityResult - Add");
             if (resultCode == Activity.RESULT_OK) {
                 UUID id = (UUID) data.getSerializableExtra(GiftCardAddFragment.EXTRA_ADD);
@@ -270,7 +263,7 @@ public class GiftCardListFragment extends Fragment {
             return mGiftCards.size();
         }
 
-        public void updateList(List<GiftCard> cards){
+        public void updateList(List<GiftCard> cards) {
             mGiftCards = cards;
         }
     }
