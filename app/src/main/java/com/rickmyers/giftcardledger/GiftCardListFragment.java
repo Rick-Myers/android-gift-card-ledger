@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,6 +30,7 @@ public class GiftCardListFragment extends Fragment {
     private static final int REQUEST_DELETE = 0;
     private static final int REQUEST_ADD = 1;
     private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
+    private static final String DIALOG_DELETE = "DialogDelete";
 
 
     private RecyclerView mCardRecyclerView;
@@ -49,6 +51,8 @@ public class GiftCardListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_card_list, container, false);
+
+        mGiftCardLedger = GiftCardLedger.get(getActivity());
 
         mCardRecyclerView = view.findViewById(R.id.card_recycler_view);
         mCardRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -131,6 +135,26 @@ public class GiftCardListFragment extends Fragment {
         if (mAdapter == null) {
             mAdapter = new GiftCardAdapter(giftCards);
             mCardRecyclerView.setAdapter(mAdapter);
+
+            new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                @Override
+                public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+                    return false;
+                }
+
+                @Override
+                public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                    FragmentManager manager = getFragmentManager();
+                    int clicked = viewHolder.getAdapterPosition();
+                    GiftCard card = mGiftCardLedger.getGiftCardList().get(clicked);
+                    DeleteCardFragment dialog = DeleteCardFragment.newInstance(card.getId());
+                    dialog.setTargetFragment(GiftCardListFragment.this, REQUEST_DELETE);
+                    dialog.show(manager, DIALOG_DELETE);
+
+
+                }
+            }).attachToRecyclerView(mCardRecyclerView);
+
         } else {
             if (mLastUpdatedIndex > -1) {
                 mAdapter.notifyItemChanged(mLastUpdatedIndex);
@@ -183,6 +207,9 @@ public class GiftCardListFragment extends Fragment {
             }
 
         }
+
+        //testing update when card not removed on swipe
+        updateUI();
 
         super.onActivityResult(requestCode, resultCode, data);
     }

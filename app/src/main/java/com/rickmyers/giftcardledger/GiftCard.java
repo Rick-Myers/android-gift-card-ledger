@@ -1,7 +1,5 @@
 package com.rickmyers.giftcardledger;
 
-import android.database.Cursor;
-
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Date;
