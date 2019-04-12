@@ -191,6 +191,7 @@ public class GiftCardListFragment extends Fragment {
                 Log.d(TAG, "onActivityResult - Delete");
                 mGiftCardLedger.removeGiftCard(id);
                 List<GiftCard> giftCards = mGiftCardLedger.getGiftCardList();
+                // todo only update the card that was added
                 mAdapter.updateList(giftCards);
                 mAdapter.notifyDataSetChanged();
                 updateUI();
@@ -199,8 +200,10 @@ public class GiftCardListFragment extends Fragment {
 
         if (requestCode == REQUEST_ADD) {
             List<GiftCard> giftCards = mGiftCardLedger.getGiftCardList();
-            Log.d(TAG, "onActivityResult - Add");
             if (resultCode == Activity.RESULT_OK) {
+                Log.d(TAG, "onActivityResult - Add");
+
+                // todo only update the card that was added
                 UUID id = (UUID) data.getSerializableExtra(GiftCardAddFragment.EXTRA_ADD);
                 mAdapter.updateList(giftCards);
                 mAdapter.notifyDataSetChanged();

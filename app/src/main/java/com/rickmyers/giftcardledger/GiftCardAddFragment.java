@@ -4,11 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -23,98 +19,56 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
- * todo Validate input! Be careful at the moment, input is not validated and will crash the app!
+ * A Fragment responsible for gathering user input, creating a {@link GiftCard} and adding to the database.
+ *
+ * @author Rick Myers
  */
-
 public class GiftCardAddFragment extends Fragment {
 
-    private static final String ARG_CARD_ID = "card_id";
-    public static final String EXTRA_ADD = "com.rickmyers.giftcardledger.delete";
-    private GiftCard mGiftCard;
+    // logging tag
     private static final String TAG = "GiftCardAddFragment";
+
+    public static final String EXTRA_ADD = "com.rickmyers.giftcardledger.add";
     private EditText mName;
     private EditText mBalance;
-    private EditText mNumber;
     private FloatingActionButton mFab;
 
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-
-
-        //UUID cardID = (UUID) getArguments().getSerializable(ARG_CARD_ID);
-        //mGiftCard = GiftCardLedger.get(getActivity()).getGiftCard(cardID);
-    }
-
-
+    /**
+     * Returns a {@link View} which contains user input fields for creating a new {@link GiftCard}
+     *
+     * @param inflater           the layout inflater
+     * @param container          the ViewGroup which contains this view
+     * @param savedInstanceState the Bundle used to host Fragment data
+     * @return an inflated Add card view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_add_card, container, false);
 
-
-
-
         mName = v.findViewById(R.id.card_name);
         mBalance = v.findViewById(R.id.card_balance);
 
-        mFab = getActivity().findViewById(R.id.fab);//v.findViewById(R.id.fab);
+        // todo perhaps add a save button to the menu instead of using FAB?
+        mFab = getActivity().findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // todo validate this data!
                 if (mBalance.getText().length() > 0 && mName.getText() != null) {
+                    // create a new gift card with the data given by the user and add to ledger which inserts into database
                     GiftCard newCard = new GiftCard();
                     newCard.setBalance(new BigDecimal(mBalance.getText().toString()));
                     newCard.setName(mName.getText().toString());
                     GiftCardLedger.get(getActivity()).addCard(newCard);
 
-
-
+                    // return intent to the calling activity with the results of the card add
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra(EXTRA_ADD, newCard.getId());
                     getActivity().setResult(Activity.RESULT_OK, returnIntent);
 
-                    //sendResult(getActivity().RESULT_OK, mGiftCard.getId());
+                    // end the activity
                     getActivity().finish();
                 }
-            }
-        });
-
-
-
-        mName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //mGiftCard.setName(s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-
-        mBalance.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //mGiftCard.setBalance(new BigDecimal(s.toString()));
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
             }
         });
 
@@ -130,25 +84,5 @@ public class GiftCardAddFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
-    }
-
-    public static GiftCardAddFragment newInstance(UUID cardID){
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_CARD_ID, cardID);
-
-        GiftCardAddFragment fragment = new GiftCardAddFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    private void sendResult(int resultCode, UUID id){
-        if (getTargetFragment() == null){
-            return;
-        }
-
-        Intent intent = new Intent();
-        intent.putExtra(EXTRA_ADD, id);
-
-        getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, intent);
     }
 }
