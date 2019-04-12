@@ -6,14 +6,29 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.rickmyers.giftcardledger.database.GiftCardDbSchema.GiftCardTable;
 
+/**
+ * An extension of the {@link SQLiteOpenHelper} class. Used to create and upgrade the database.
+ *
+ * @author Rick Myers
+ */
 public class GiftCardDBHelper extends SQLiteOpenHelper {
     private static final int VERSION = 1;
     public static final String DATABASE_NAME = "gift_card.db";
 
+    /**
+     * Class constructor
+     *
+     * @param context the Application's context
+     */
     public GiftCardDBHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
     }
 
+    /**
+     * Creates the database is it doesn't already exist.
+     *
+     * @param db the SQLite database
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         // todo define column data types
@@ -27,6 +42,13 @@ public class GiftCardDBHelper extends SQLiteOpenHelper {
         );
     }
 
+    /**
+     * Upgrades database if a new version exists.
+     *
+     * @param db         the SQLite database
+     * @param oldVersion the old version number
+     * @param newVersion the new version number
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
