@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 /**
  * A Fragment responsible for gathering user input, creating a {@link GiftCard} and adding to the database.
@@ -47,6 +46,11 @@ public class GiftCardAddFragment extends Fragment {
 
         mName = v.findViewById(R.id.card_name);
         mBalance = v.findViewById(R.id.card_balance);
+
+        // todo perhaps a reference to activity isn't needed.
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        ActionBar ab = activity.getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
 
         // todo perhaps add a save button to the menu instead of using FAB?
         mFab = getActivity().findViewById(R.id.fab);

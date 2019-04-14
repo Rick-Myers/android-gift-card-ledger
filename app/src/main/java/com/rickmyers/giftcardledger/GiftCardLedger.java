@@ -31,7 +31,7 @@ public class GiftCardLedger {
      * Returns a new {@link GiftCardLedger} object if one doesn't exist. Otherwise, returns the
      * existing GiftCardLedger.
      *
-     * @param context Context of the hosting activity
+     * @param context the Application's context
      * @return the new/existing {@link GiftCardLedger}
      */
     public static GiftCardLedger get(Context context) {

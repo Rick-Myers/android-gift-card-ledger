@@ -1,24 +1,34 @@
 package com.rickmyers.giftcardledger;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 
+/**
+ * An abstract {@link android.app.Activity} used to host a single fragment.
+ *
+ * @author Rick Myers
+ */
 public abstract class SingleFragmentActivity extends AppCompatActivity {
 
+    /**
+     * Returns fragment to be hosted by this Activity.
+     *
+     * @return fragment
+     */
     protected abstract Fragment createFragment();
 
+    /**
+     * Inflates fragment container and adds fragment.
+     *
+     * @param savedInstanceState the Bundle used to host Fragment data.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_main);//single_frame_layout);
+        setContentView(R.layout.fragment_main);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

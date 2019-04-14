@@ -25,13 +25,21 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * A Fragment responsible for displaying the main screen. This is where most of the user interaction
+ * will take place.
+ *
+ * @author Rick Myers
+ */
 public class GiftCardListFragment extends Fragment {
+
+    // logging tag
     private static final String TAG = "GiftCardListFragment";
+
     private static final int REQUEST_DELETE = 0;
     private static final int REQUEST_ADD = 1;
     private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
     private static final String DIALOG_DELETE = "DialogDelete";
-
 
     private RecyclerView mCardRecyclerView;
     private GiftCardAdapter mAdapter;
@@ -40,13 +48,26 @@ public class GiftCardListFragment extends Fragment {
     private boolean mSubtitleVisible;
     private TextView mEmptyView;
 
-
+    /**
+     * On Fragment creation, enables Options Menu.
+     *
+     * @param savedInstanceState the Bundle used to host Fragment data
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
+    /**
+     * Returns main Fragment view for the {@link GiftCardListFragment}.
+     *
+     * @param inflater           the layout inflater
+     * @param container          the ViewGroup which contains this view
+     * @param savedInstanceState the Bundle used to host Fragment data
+     * @return the main view for {@link GiftCardListFragment}
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -59,7 +80,7 @@ public class GiftCardListFragment extends Fragment {
 
         mEmptyView = view.findViewById(R.id.empty_view);
 
-
+        // todo remove and use Options menu
         FloatingActionButton fab = view.findViewById(R.id.fab);
         fab = getActivity().findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +91,7 @@ public class GiftCardListFragment extends Fragment {
             }
         });
 
+        // If the Bundle is not empty, set subtitle option accordingly
         if (savedInstanceState != null) {
             mSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
         }
@@ -79,12 +101,23 @@ public class GiftCardListFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Saves instance state.
+     *
+     * @param outState Bundle used for saving
+     */
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(SAVED_SUBTITLE_VISIBLE, mSubtitleVisible);
     }
 
+    /**
+     * Creates option menu.
+     *
+     * @param menu     the main menu
+     * @param inflater the inflater for menu
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -96,17 +129,24 @@ public class GiftCardListFragment extends Fragment {
         } else {
             subtitleItem.setTitle(R.string.show_subtitle);
         }
-
     }
 
+    /**
+     * Processes the selected {@link MenuItem} and returns true when processing has been completed.
+     *
+     * @param item the selected {@link MenuItem}
+     * @return true after processing for selected item is completed
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.new_card:
+                // start GiftCardAddActivity and wait for result
                 Intent intent = new Intent(getActivity(), GiftCardAddActivity.class);
                 startActivityForResult(intent, REQUEST_ADD);
                 return true;
             case R.id.show_subtitle:
+                // toggle the subtitle and recreate the options menu
                 mSubtitleVisible = !mSubtitleVisible;
                 getActivity().invalidateOptionsMenu();
                 updateSubtitle();
@@ -116,10 +156,16 @@ public class GiftCardListFragment extends Fragment {
         }
     }
 
+    /**
+     * Updates the subtitle based on the number of cards are in the list.
+     */
     private void updateSubtitle() {
         int cardCount = mGiftCardLedger.getGiftCardList().size();
+
+        // Card or Cards based on card count.
         String subtitle = getResources().getQuantityString(R.plurals.subtitle_plural, cardCount, cardCount);
 
+        // if false, subtitle is not shown.
         if (!mSubtitleVisible) {
             subtitle = null;
         }
@@ -128,6 +174,10 @@ public class GiftCardListFragment extends Fragment {
         activity.getSupportActionBar().setSubtitle(subtitle);
     }
 
+    /**
+     * Insures the UI is up to date. Responsible for setting up the recycler view adapter and
+     * updating positions based on other activities.
+     */
     private void updateUI() {
         mGiftCardLedger = GiftCardLedger.get(getActivity());
         List<GiftCard> giftCards = mGiftCardLedger.getGiftCardList();
@@ -136,7 +186,8 @@ public class GiftCardListFragment extends Fragment {
             mAdapter = new GiftCardAdapter(giftCards);
             mCardRecyclerView.setAdapter(mAdapter);
 
-            new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            // setup slide to delete
+            new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
                 @Override
                 public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
                     return false;
@@ -145,23 +196,24 @@ public class GiftCardListFragment extends Fragment {
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                     FragmentManager manager = getFragmentManager();
+                    // find which viewHolder was clicked
                     int clicked = viewHolder.getAdapterPosition();
+                    // find the card that was clicked in the database
                     GiftCard card = mGiftCardLedger.getGiftCardList().get(clicked);
+                    // Call the delete card dialog to give the user option to delete the card
                     DeleteCardFragment dialog = DeleteCardFragment.newInstance(card.getId());
                     dialog.setTargetFragment(GiftCardListFragment.this, REQUEST_DELETE);
                     dialog.show(manager, DIALOG_DELETE);
-
-
                 }
             }).attachToRecyclerView(mCardRecyclerView);
 
         } else {
+            // todo This is lazy! Implement a way to update a list of items that were changed coming back to list activity.
             if (mLastUpdatedIndex > -1) {
                 mAdapter.notifyItemChanged(mLastUpdatedIndex);
                 mLastUpdatedIndex = -1;
                 mAdapter.updateList(giftCards);
-                // todo This is lazy! Implement a way to update a list of items that were changed coming back to list activity.
-
+                // todo This is lazy!
                 mAdapter.notifyDataSetChanged();
             } else {
                 mAdapter.notifyDataSetChanged();
@@ -169,6 +221,16 @@ public class GiftCardListFragment extends Fragment {
 
         }
 
+        updateEmptyView();
+
+        updateSubtitle();
+    }
+
+    /**
+     * Checks if the gift card list is empty. If it is empty, displays the empty view. Otherwise,
+     * displays the recycler view.
+     */
+    private void updateEmptyView() {
         if (mGiftCardLedger.getGiftCardList().isEmpty()) {
             mCardRecyclerView.setVisibility(View.GONE);
             mEmptyView.setVisibility(View.VISIBLE);
@@ -176,15 +238,20 @@ public class GiftCardListFragment extends Fragment {
             mCardRecyclerView.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
         }
-
-        updateSubtitle();
-
     }
 
+    /**
+     * Processes data after and Activity returns a result.
+     *
+     * @param requestCode the code used when the Activity was started
+     * @param resultCode  the code used when the Activity finished
+     * @param data        the intent that hosts the data of the finished Activity
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "Request: " + requestCode + "Result: " + resultCode);
 
+        // Deletes card if user requested to delete during delete dialog
         if (requestCode == REQUEST_DELETE) {
             if (resultCode == Activity.RESULT_OK) {
                 UUID id = (UUID) data.getSerializableExtra(DeleteCardFragment.EXTRA_DELETE);
@@ -198,6 +265,7 @@ public class GiftCardListFragment extends Fragment {
             }
         }
 
+        // Adds new card if user saved a card in GiftCardAddActivity
         if (requestCode == REQUEST_ADD) {
             List<GiftCard> giftCards = mGiftCardLedger.getGiftCardList();
             if (resultCode == Activity.RESULT_OK) {
@@ -217,32 +285,37 @@ public class GiftCardListFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * Updates UI on Activity resume.
+     */
     @Override
     public void onResume() {
         super.onResume();
         updateUI();
     }
 
-    private class GiftCardHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    /**
+     * A {@link RecyclerView.ViewHolder} for {@link GiftCard}.
+     */
+    private class GiftCardHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView mNameTextView;
         private TextView mBalanceTextView;
         private GiftCard mGiftCard;
-        private GiftCardAdapter mCardAdapter;
-        private static final String DIALOG_DELETE = "DialogDelete";
-        private static final String TAG = "GiftCardHolder long";
-        private static final int REQUEST_DELETE = 0;
 
         public GiftCardHolder(LayoutInflater inflater, ViewGroup parent, GiftCardAdapter testAdapter) {
             super(inflater.inflate(R.layout.list_item_card, parent, false));
             itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
 
             mNameTextView = itemView.findViewById(R.id.card_name);
             mBalanceTextView = itemView.findViewById(R.id.card_balance);
-            mCardAdapter = testAdapter;
         }
 
+        /**
+         * Binds data from a {@link GiftCard} to the ViewHolder.
+         *
+         * @param card the gift card to be bound to ViewHolder
+         */
         public void bind(GiftCard card) {
             mGiftCard = card;
             mNameTextView.setText(mGiftCard.getName());
@@ -251,23 +324,17 @@ public class GiftCardListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
+            // starts intent to edit the card that was clicked. also sets this position as the last
+            // updated
             Intent intent = GiftCardPagerActivity.newIntent(getActivity(), mGiftCard.getId());
             mLastUpdatedIndex = this.getAdapterPosition();
             startActivity(intent);
         }
-
-        @Override
-        public boolean onLongClick(View v) {
-            Log.d(TAG, "Long Click");
-
-            FragmentManager manager = getFragmentManager();
-            DeleteCardFragment dialog = DeleteCardFragment.newInstance(mGiftCard.getId());
-            dialog.setTargetFragment(GiftCardListFragment.this, REQUEST_DELETE);
-            dialog.show(manager, DIALOG_DELETE);
-            return true;
-        }
     }
 
+    /**
+     * A {@link RecyclerView.Adapter} for {@link GiftCard}
+     */
     private class GiftCardAdapter extends RecyclerView.Adapter<GiftCardHolder> {
         private List<GiftCard> mGiftCards;
 
