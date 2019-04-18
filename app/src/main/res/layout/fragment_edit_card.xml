@@ -64,4 +64,24 @@
         android:inputType="numberDecimal"
         android:autofillHints="New Balance"/>
 
+    <ImageView
+        android:id="@+id/card_picture"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:scaleType="centerInside"
+        android:cropToPadding="true"
+        android:background="@color/j_light_grey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_balance_edit"/>
+
+    <ImageButton
+        android:id="@+id/button_take_picture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_menu_camera"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_picture"/>
+
 </android.support.constraint.ConstraintLayout>

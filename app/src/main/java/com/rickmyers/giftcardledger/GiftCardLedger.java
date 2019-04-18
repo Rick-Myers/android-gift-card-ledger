@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -168,5 +169,16 @@ public class GiftCardLedger {
                 null
         );
         return new GiftCardCursorWrapper(cursor);
+    }
+
+    /**
+     * Returns the gift card's photo
+     *
+     * @param card the gift card
+     * @return the gift card's photo
+     */
+    public File getPhotoFile(GiftCard card){
+        File filesDir = mContext.getFilesDir();
+        return new File(filesDir, card.getPhotoFilename());
     }
 }

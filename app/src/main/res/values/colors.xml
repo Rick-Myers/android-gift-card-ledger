@@ -5,4 +5,5 @@
     <color name="colorAccent">#D81B60</color>
     <color name="j_dark">#212121</color>
     <color name="j_light_blue">#80A6E9</color>
+    <color name="j_light_grey">#bdbdbd</color>
 </resources>
