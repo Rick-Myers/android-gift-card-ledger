@@ -3,7 +3,11 @@ package com.rickmyers.giftcardledger.utilities;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Point;
+import android.media.ExifInterface;
+
+import java.io.IOException;
 
 public class PictureUtils {
 
@@ -12,7 +16,38 @@ public class PictureUtils {
         activity.getWindowManager().getDefaultDisplay()
                 .getSize(size);
 
-        return getScaledBitmap(path, size.x, size.y);
+        Bitmap scaledBitmap = getScaledBitmap(path, size.x, size.y);
+        ExifInterface exifInterface = null;
+        try {
+            exifInterface = new ExifInterface(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String orientationString = exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION);
+        int orientationTag = orientationString != null ? Integer.parseInt(orientationString) :
+                ExifInterface.ORIENTATION_NORMAL;
+        int rotationAngle = 0;
+
+
+        switch (orientationTag) {
+            case ExifInterface.ORIENTATION_ROTATE_90 :
+                rotationAngle = 90;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180 :
+                rotationAngle = 180;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270 :
+                rotationAngle = 270;
+                break;
+            default:
+                rotationAngle = 0;
+
+        }
+        Matrix matrix = new Matrix();
+        matrix.postRotate(rotationAngle);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(),
+                scaledBitmap.getHeight(), matrix, true);
+        return rotatedBitmap;
     }
 
     public static Bitmap getScaledBitmap(String path, int destWidth, int destHeight) {
