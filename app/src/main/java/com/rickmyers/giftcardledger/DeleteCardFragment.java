@@ -22,8 +22,8 @@ public class DeleteCardFragment extends AppCompatDialogFragment {
     private UUID mId;
 
     /**
-     * Create an instance of a {@link DeleteCardFragment}. The a {@link Bundle} will have the UUID
-     * of the {@link GiftCard} added to the bundle.
+     * Creates an instance of a {@link DeleteCardFragment}. The {@link Bundle} will contain the UUID
+     * of the {@link GiftCard}.
      *
      * @param id the gift card's {@link UUID}
      * @return the Delete Card dialog fragment.
