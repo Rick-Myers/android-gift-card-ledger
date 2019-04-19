@@ -23,4 +23,9 @@
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
+    <style name="CustomDialog" parent="@android:style/Theme.Holo.Light" >
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
 </resources>

@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -38,6 +39,7 @@ public class GiftCardEditFragment extends Fragment {
 
     private static final String ARG_CARD_ID = "card_id";
     private static final int REQUEST_PHOTO = 0;
+    private static final String DIALOG_IMAGE = "DialogImage";
 
     private TextView mNameTextView;
     private EditText mBalanceEditText;
@@ -100,8 +102,6 @@ public class GiftCardEditFragment extends Fragment {
 
         mBalanceEditText.setText(mGiftCard.getBalance().toString());
 
-        mPhotoView = view.findViewById(R.id.card_picture);
-        mPhotoButton = view.findViewById(R.id.button_take_picture);
         setupPhotoView(view, packageManager);
 
         return view;
@@ -109,6 +109,9 @@ public class GiftCardEditFragment extends Fragment {
 
     private void setupPhotoView(View view, PackageManager packageManager) {
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        mPhotoView = view.findViewById(R.id.card_picture);
+        mPhotoButton = view.findViewById(R.id.button_take_picture);
 
         boolean canTakePhoto = mPhotoFile != null && captureImage.resolveActivity(packageManager) != null;
         mPhotoButton.setEnabled(canTakePhoto);
@@ -136,6 +139,20 @@ public class GiftCardEditFragment extends Fragment {
                 updatePhotoView();
                 mPhotoView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
+            }
+        });
+
+        mPhotoView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(mPhotoFile!= null && mPhotoFile.exists())
+                {
+                    FragmentManager fragmentManager = getFragmentManager();
+
+                    ImagePreviewFragment.newInstance(mPhotoFile).show(fragmentManager, DIALOG_IMAGE);
+                }
             }
         });
     }
