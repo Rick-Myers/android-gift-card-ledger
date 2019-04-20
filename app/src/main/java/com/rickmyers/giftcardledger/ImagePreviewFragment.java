@@ -46,4 +46,5 @@ public class ImagePreviewFragment extends DialogFragment {
         return new AlertDialog.Builder(getActivity()).setView(imageView).create();
 
      }
+
 }
