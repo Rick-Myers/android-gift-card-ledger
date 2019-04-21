@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,6 +17,9 @@ import com.rickmyers.giftcardledger.utilities.PictureUtils;
 import java.io.File;
 
 public class ImagePreviewFragment extends DialogFragment {
+
+    // logging tag
+    private static final String TAG = "DialogFragment";
 
     private static final String ARG_GIFTCARD_IMAGE = "giftcard_image";
 
@@ -42,9 +46,21 @@ public class ImagePreviewFragment extends DialogFragment {
         ImageView imageView = v.findViewById(R.id.card_picture);
         imageView.setImageBitmap(image);
 
+        Boolean test = imageView.getAdjustViewBounds();
+        Log.d(TAG, test.toString());
 
         return new AlertDialog.Builder(getActivity()).setView(imageView).create();
 
      }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        Dialog dialog = getDialog();
+        if (dialog != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
+
+
+    }
 }
