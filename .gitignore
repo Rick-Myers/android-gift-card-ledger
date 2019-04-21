@@ -65,6 +65,8 @@ fastlane/test_output
 fastlane/readme.md
 .idea/
 app/src/test/java/com/rickmyers/giftcardledger/ExampleUnitTest.java
+app/src/androidTest/
+app/src/test/
 gradle/
 build.gradle
 gradlew.bat
