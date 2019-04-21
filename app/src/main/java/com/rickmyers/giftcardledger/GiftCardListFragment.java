@@ -81,7 +81,7 @@ public class GiftCardListFragment extends Fragment {
         mEmptyView = view.findViewById(R.id.empty_view);
 
         // todo remove and use Options menu
-        FloatingActionButton fab = view.findViewById(R.id.fab);
+        /*FloatingActionButton fab = view.findViewById(R.id.fab);
         fab = getActivity().findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +90,7 @@ public class GiftCardListFragment extends Fragment {
                         .setAction("Action", null).show();
             }
         });
-
+*/
         // If the Bundle is not empty, set subtitle option accordingly
         if (savedInstanceState != null) {
             mSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);

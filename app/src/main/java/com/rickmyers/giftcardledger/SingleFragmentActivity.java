@@ -1,6 +1,7 @@
 package com.rickmyers.giftcardledger;
 
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,11 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
      */
     protected abstract Fragment createFragment();
 
+    @LayoutRes
+    protected int getLayoutResId() {
+        return R.layout.fragment_main;
+    }
+
     /**
      * Inflates fragment container and adds fragment.
      *
@@ -28,7 +34,7 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_main);
+        setContentView(getLayoutResId());
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

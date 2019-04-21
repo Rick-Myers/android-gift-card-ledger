@@ -13,4 +13,9 @@ public class GiftCardListActivity extends SingleFragmentActivity {
     protected Fragment createFragment() {
         return new GiftCardListFragment();
     }
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_masterdetail;//twofragment_main;
+    }
 }
