@@ -1,6 +1,7 @@
 package com.rickmyers.giftcardledger;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -31,6 +32,29 @@ public class GiftCardAddFragment extends Fragment {
     private EditText mName;
     private EditText mBalance;
     private FloatingActionButton mFab;
+
+    private Callbacks mCallbacks;
+
+    public interface Callbacks{
+        void onGiftCardAdded(GiftCard card);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks = (Callbacks) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
+
+    private void addGiftCard(GiftCard card){
+        mCallbacks.onGiftCardAdded(card);
+    }
+
 
     /**
      * Returns a {@link View} which contains user input fields for creating a new {@link GiftCard}
@@ -63,15 +87,20 @@ public class GiftCardAddFragment extends Fragment {
                     GiftCard newCard = new GiftCard();
                     newCard.setBalance(new BigDecimal(mBalance.getText().toString()));
                     newCard.setName(mName.getText().toString());
-                    GiftCardLedger.get(getActivity()).addCard(newCard);
+
+                    /* todo Add a callback to both the ListActivity and AddActivity, both will not occur.
+                    If list occurs, then just update the list and focus that card. If the AddActivity occurs, do the start activity for result */
+
+                    addGiftCard(newCard);
+                    //GiftCardLedger.get(getActivity()).addCard(newCard);
 
                     // return intent to the calling activity with the results of the card add
-                    Intent returnIntent = new Intent();
+                    /*Intent returnIntent = new Intent();
                     returnIntent.putExtra(EXTRA_ADD, newCard.getId());
-                    getActivity().setResult(Activity.RESULT_OK, returnIntent);
+                    getActivity().setResult(Activity.RESULT_OK, returnIntent);*/
 
                     // end the activity
-                    getActivity().finish();
+                    //getActivity().finish();
                 }
             }
         });

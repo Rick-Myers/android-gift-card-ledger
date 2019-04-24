@@ -20,7 +20,7 @@ import java.util.UUID;
  *
  * @author Rick Myers
  */
-public class GiftCardPagerActivity extends AppCompatActivity {
+public class GiftCardPagerActivity extends AppCompatActivity implements GiftCardEditFragment.Callbacks {
 
     private static final String EXTRA_CARD_ID = "com.rickmyers.giftcardledger.card_id";
 
@@ -93,5 +93,10 @@ public class GiftCardPagerActivity extends AppCompatActivity {
         Intent intent = new Intent(packageContext, GiftCardPagerActivity.class);
         intent.putExtra(EXTRA_CARD_ID, cardID);
         return intent;
+    }
+
+    @Override
+    public void onGiftCardUpdated(GiftCard card) {
+
     }
 }

@@ -1,6 +1,7 @@
 package com.rickmyers.giftcardledger;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -48,6 +49,23 @@ public class GiftCardEditFragment extends Fragment {
     private ImageView mPhotoView;
     private File mPhotoFile;
     private Point mPhotoViewDimensions;
+    private Callbacks mCallbacks;
+
+    public interface Callbacks{
+        void onGiftCardUpdated(GiftCard card);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks = (Callbacks) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
 
     /**
      * Retrieves {@link GiftCard} data from model when hosting Activity is created.
@@ -97,6 +115,7 @@ public class GiftCardEditFragment extends Fragment {
                     mGiftCard.setBalance(new BigDecimal(s.toString()));
                 else
                     mGiftCard.setBalance(new BigDecimal(0));
+                updateGiftCard();
             }
         });
 
@@ -170,6 +189,11 @@ public class GiftCardEditFragment extends Fragment {
 
             updatePhotoView();
         }
+    }
+
+    private void updateGiftCard() {
+        GiftCardLedger.get(getActivity()).updateGiftCard(mGiftCard);
+        mCallbacks.onGiftCardUpdated(mGiftCard);
     }
 
     /**

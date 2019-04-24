@@ -1,6 +1,7 @@
 package com.rickmyers.giftcardledger;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,9 +10,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,6 +50,25 @@ public class GiftCardListFragment extends Fragment {
     private GiftCardLedger mGiftCardLedger;
     private boolean mSubtitleVisible;
     private TextView mEmptyView;
+    private Callbacks mCallbacks;
+
+    public interface Callbacks {
+        void onGiftCardSelected(GiftCard card);
+        void onGiftCardAdd();
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks = (Callbacks) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
 
     /**
      * On Fragment creation, enables Options Menu.
@@ -79,6 +101,18 @@ public class GiftCardListFragment extends Fragment {
         mCardRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mEmptyView = view.findViewById(R.id.empty_view);
+
+        // Get which view group is inflated by the activity
+        final ViewGroup viewGroup = (ViewGroup) ((ViewGroup)getActivity().findViewById(android.R.id.content)).getChildAt(0);
+
+        if(viewGroup.getTag().toString() == "double")
+        {
+            Toolbar toolbar = viewGroup.findViewById(R.id.toolbar);
+            // Get a support ActionBar corresponding to this toolbar
+            ActionBar ab = ((AppCompatActivity)getActivity()).getSupportActionBar();
+            // Enable the Up button
+            ab.setDisplayHomeAsUpEnabled(false);
+        }
 
         // todo remove and use Options menu
         /*FloatingActionButton fab = view.findViewById(R.id.fab);
@@ -141,9 +175,12 @@ public class GiftCardListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.new_card:
-                // start GiftCardAddActivity and wait for result
+                /*// start GiftCardAddActivity and wait for result
                 Intent intent = new Intent(getActivity(), GiftCardAddActivity.class);
-                startActivityForResult(intent, REQUEST_ADD);
+                startActivityForResult(intent, REQUEST_ADD);*/
+
+                //testing callbacks
+                mCallbacks.onGiftCardAdd();
                 return true;
             case R.id.show_subtitle:
                 // toggle the subtitle and recreate the options menu
@@ -155,6 +192,8 @@ public class GiftCardListFragment extends Fragment {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
 
     /**
      * Updates the subtitle based on the number of cards are in the list.
@@ -178,7 +217,7 @@ public class GiftCardListFragment extends Fragment {
      * Insures the UI is up to date. Responsible for setting up the recycler view adapter and
      * updating positions based on other activities.
      */
-    private void updateUI() {
+    public void updateUI() {
         mGiftCardLedger = GiftCardLedger.get(getActivity());
         List<GiftCard> giftCards = mGiftCardLedger.getGiftCardList();
 
@@ -216,6 +255,8 @@ public class GiftCardListFragment extends Fragment {
                 // todo This is lazy!
                 mAdapter.notifyDataSetChanged();
             } else {
+                mAdapter.notifyItemChanged(0);
+                mAdapter.updateList(giftCards);
                 mAdapter.notifyDataSetChanged();
             }
 
@@ -326,9 +367,10 @@ public class GiftCardListFragment extends Fragment {
         public void onClick(View v) {
             // starts intent to edit the card that was clicked. also sets this position as the last
             // updated
-            Intent intent = GiftCardPagerActivity.newIntent(getActivity(), mGiftCard.getId());
+            //Intent intent = GiftCardPagerActivity.newIntent(getActivity(), mGiftCard.getId());
             mLastUpdatedIndex = this.getAdapterPosition();
-            startActivity(intent);
+            //startActivity(intent);
+            mCallbacks.onGiftCardSelected(mGiftCard);
         }
     }
 
