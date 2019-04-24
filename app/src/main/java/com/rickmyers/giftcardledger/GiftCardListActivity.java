@@ -72,6 +72,7 @@ public class GiftCardListActivity extends SingleFragmentActivity implements Gift
     public void onGiftCardAdded(GiftCard card) {
         Log.d(TAG, "onGiftCardAdded");
         GiftCardLedger.get(this).addCard(card);
+        onGiftCardSelected(card);
         updateListUI();
     }
 }

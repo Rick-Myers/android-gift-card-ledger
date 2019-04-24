@@ -8,6 +8,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -71,10 +73,12 @@ public class GiftCardAddFragment extends Fragment {
         mName = v.findViewById(R.id.card_name);
         mBalance = v.findViewById(R.id.card_balance);
 
-        // todo perhaps a reference to activity isn't needed.
+        disableUpIfTwoPane();
+
+        /*// todo perhaps a reference to activity isn't needed.
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         ActionBar ab = activity.getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
+        ab.setDisplayHomeAsUpEnabled(true);*/
 
         // todo perhaps add a save button to the menu instead of using FAB?
         mFab = getActivity().findViewById(R.id.fab);
@@ -106,6 +110,22 @@ public class GiftCardAddFragment extends Fragment {
         });
 
         return v;
+    }
+
+    private void disableUpIfTwoPane() {
+        // Get which view group is inflated by the activity
+        final ViewGroup viewGroup = (ViewGroup) ((ViewGroup)getActivity().findViewById(android.R.id.content)).getChildAt(0);
+        // Get a support ActionBar corresponding to this toolbar
+        ActionBar ab = ((AppCompatActivity)getActivity()).getSupportActionBar();
+
+       // todo add "double" string to resources
+        if(viewGroup.getTag().toString().equalsIgnoreCase("double")) {
+            // Disable the Up button
+            ab.setDisplayHomeAsUpEnabled(false);
+        } else {
+            // Enable the Up button
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override

@@ -102,17 +102,7 @@ public class GiftCardListFragment extends Fragment {
 
         mEmptyView = view.findViewById(R.id.empty_view);
 
-        // Get which view group is inflated by the activity
-        final ViewGroup viewGroup = (ViewGroup) ((ViewGroup)getActivity().findViewById(android.R.id.content)).getChildAt(0);
-
-        if(viewGroup.getTag().toString() == "double")
-        {
-            Toolbar toolbar = viewGroup.findViewById(R.id.toolbar);
-            // Get a support ActionBar corresponding to this toolbar
-            ActionBar ab = ((AppCompatActivity)getActivity()).getSupportActionBar();
-            // Enable the Up button
-            ab.setDisplayHomeAsUpEnabled(false);
-        }
+        disableUpIfTwoPane();
 
         // todo remove and use Options menu
         /*FloatingActionButton fab = view.findViewById(R.id.fab);
@@ -133,6 +123,20 @@ public class GiftCardListFragment extends Fragment {
         updateUI();
 
         return view;
+    }
+
+    private void disableUpIfTwoPane() {
+        // Get which view group is inflated by the activity
+        final ViewGroup viewGroup = (ViewGroup) ((ViewGroup)getActivity().findViewById(android.R.id.content)).getChildAt(0);
+
+        // todo add "double" string to resources
+        if(viewGroup.getTag().toString().equalsIgnoreCase("double"))
+        {
+            // Get a support ActionBar corresponding to this toolbar
+            ActionBar ab = ((AppCompatActivity)getActivity()).getSupportActionBar();
+            // Disable the Up button
+            ab.setDisplayHomeAsUpEnabled(false);
+        }
     }
 
     /**
