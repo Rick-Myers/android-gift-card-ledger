@@ -348,8 +348,10 @@ public class GiftCardListFragment extends Fragment {
         private TextView mBalanceTextView;
         private GiftCard mGiftCard;
 
+
+
         public GiftCardHolder(LayoutInflater inflater, ViewGroup parent, GiftCardAdapter testAdapter) {
-            super(inflater.inflate(R.layout.list_item_card, parent, false));
+            super(inflater.inflate(R.layout.cardview_item, parent, false)); //list_item_card, parent, false));
             itemView.setOnClickListener(this);
 
             mNameTextView = itemView.findViewById(R.id.card_name);
