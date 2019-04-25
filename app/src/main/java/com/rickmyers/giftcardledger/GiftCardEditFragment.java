@@ -225,9 +225,11 @@ public class GiftCardEditFragment extends Fragment {
     private void updatePhotoView() {
         if (mPhotoFile == null || !mPhotoFile.exists()) {
             mPhotoView.setImageDrawable(null);
+            mPhotoView.setContentDescription(getString(R.string.card_photo_no_image_description));
         } else {
             Bitmap bitmap = (mPhotoViewDimensions == null) ? PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity()) : PictureUtils.getScaledBitmap(mPhotoFile.getPath(), mPhotoViewDimensions.x, mPhotoViewDimensions.y);
             mPhotoView.setImageBitmap(bitmap);
+            mPhotoView.setContentDescription(getString(R.string.card_photo_image_description));
         }
     }
 }

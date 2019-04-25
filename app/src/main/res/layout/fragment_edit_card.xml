@@ -19,7 +19,8 @@
         android:text="@string/card_name_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:labelFor="@+id/card_name"/>
 
     <TextView
         android:id="@+id/card_name"
@@ -46,7 +47,8 @@
         android:text="@string/card_balance_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_name" />
+        app:layout_constraintTop_toBottomOf="@+id/card_name"
+        android:labelFor="@+id/card_balance_edit"/>
 
     <EditText
         android:id="@+id/card_balance_edit"
@@ -73,7 +75,9 @@
         android:background="@color/j_light_grey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_balance_edit"/>
+        app:layout_constraintTop_toBottomOf="@+id/card_balance_edit"
+        android:contentDescription="@string/card_photo_no_image_description"
+        android:focusable="true"/>
 
     <ImageButton
         android:id="@+id/button_take_picture"
@@ -82,6 +86,7 @@
         android:src="@android:drawable/ic_menu_camera"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_picture"/>
+        app:layout_constraintTop_toBottomOf="@+id/card_picture"
+        android:contentDescription="@string/card_photo_button_description"/>
 
 </android.support.constraint.ConstraintLayout>
