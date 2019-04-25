@@ -21,4 +21,7 @@
         <item quantity="one">%1$d tarjeta</item>
         <item quantity="other">%1$d tarjetas</item>
     </plurals>
+    <string name="card_photo_button_description">" Toma una foto de tu tarjeta de regalo."</string>
+    <string name="card_photo_no_image_description">" Foto de tarjeta de regalo (no establecida)"</string>
+    <string name="card_photo_image_description">" Foto de tarjeta de regalo (set)"</string>
 </resources>
