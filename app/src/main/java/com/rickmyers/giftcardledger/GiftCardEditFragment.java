@@ -18,20 +18,28 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.rickmyers.giftcardledger.utilities.PictureUtils;
 
+import org.apache.commons.validator.routines.BigDecimalValidator;
+import org.apache.commons.validator.routines.CurrencyValidator;
+
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -40,6 +48,9 @@ import java.util.UUID;
  * @author Rick Myers
  */
 public class GiftCardEditFragment extends Fragment {
+
+    // logging tag
+    private static final String TAG = "GiftCardEditFragment";
 
     private static final String ARG_CARD_ID = "card_id";
     private static final int REQUEST_PHOTO = 0;
@@ -53,6 +64,9 @@ public class GiftCardEditFragment extends Fragment {
     private File mPhotoFile;
     private Point mPhotoViewDimensions;
     private Callbacks mCallbacks;
+    private Button mSaveButton;
+    private RadioButton mAddButton;
+    private RadioButton mSubtractButton;
 
     private RecyclerView mCardRecyclerView;
     private HistoryAdapter mAdapter;
@@ -106,9 +120,53 @@ public class GiftCardEditFragment extends Fragment {
 
         mNameTextView = view.findViewById(R.id.card_name);
         mNameTextView.setText(mGiftCard.getName());
-
         mBalanceEditText = view.findViewById(R.id.card_balance_edit);
-        mBalanceEditText.addTextChangedListener(new TextWatcher() {
+
+        mAddButton = view.findViewById(R.id.add_radio_button);
+
+        if (mAddButton.isChecked()){
+            mSaveButton.setText(R.string.add);
+        }
+        mAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSaveButton.setText(R.string.add);
+            }
+        });
+
+        mSubtractButton = view.findViewById(R.id.subtract_radio_button);
+        mSubtractButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSaveButton.setText(R.string.deduct);
+            }
+        });
+
+
+
+
+
+        mSaveButton = view.findViewById(R.id.button_update_balance);
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // todo provide better validation for input, also use a try/catch
+                CharSequence s = mBalanceEditText.getText();
+                BigDecimalValidator validator = CurrencyValidator.getInstance();
+                BigDecimal amount = validator.validate(s.toString());
+                Log.d(TAG, amount.toString());
+
+                if (amount == null)
+                    mBalanceEditText.setText("0");
+                else
+                    mBalanceEditText.setText(amount.toString());
+                    mGiftCard.setBalance(amount);
+                updateGiftCard();
+            }
+        });
+
+
+        /*mBalanceEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -126,7 +184,7 @@ public class GiftCardEditFragment extends Fragment {
                     mGiftCard.setBalance(new BigDecimal(0));
                 updateGiftCard();
             }
-        });
+        });*/
 
         mBalanceEditText.setText(mGiftCard.getBalance().toString());
 
