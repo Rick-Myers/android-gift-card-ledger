@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import java.math.BigDecimal;
@@ -33,7 +34,8 @@ public class GiftCardAddFragment extends Fragment {
     public static final String EXTRA_ADD = "com.rickmyers.giftcardledger.add";
     private EditText mName;
     private EditText mBalance;
-    private FloatingActionButton mFab;
+    private Button mSaveButton;
+    //private FloatingActionButton mFab;
 
     private Callbacks mCallbacks;
 
@@ -72,6 +74,17 @@ public class GiftCardAddFragment extends Fragment {
 
         mName = v.findViewById(R.id.card_name);
         mBalance = v.findViewById(R.id.card_balance);
+        mSaveButton = v.findViewById(R.id.save_button);
+
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mBalance.getText().length() > 0 && mName.getText() != null) {
+                    GiftCard newCard = new GiftCard(mName.getText().toString(), new BigDecimal(mBalance.getText().toString()));
+                    addGiftCard(newCard);
+                }
+            }
+        });
 
         disableUpIfTwoPane();
 
@@ -80,34 +93,18 @@ public class GiftCardAddFragment extends Fragment {
         ActionBar ab = activity.getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);*/
 
-        // todo perhaps add a save button to the menu instead of using FAB?
+        /*// todo perhaps add a save button to the menu instead of using FAB?
         mFab = getActivity().findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // todo validate this data!
                 if (mBalance.getText().length() > 0 && mName.getText() != null) {
-                    // create a new gift card with the data given by the user and add to ledger which inserts into database
-                    GiftCard newCard = new GiftCard();
-                    newCard.setBalance(new BigDecimal(mBalance.getText().toString()));
-                    newCard.setName(mName.getText().toString());
-
-                    /* todo Add a callback to both the ListActivity and AddActivity, both will not occur.
-                    If list occurs, then just update the list and focus that card. If the AddActivity occurs, do the start activity for result */
-
+                    GiftCard newCard = new GiftCard(mName.getText().toString(), new BigDecimal(mBalance.getText().toString()));
                     addGiftCard(newCard);
-                    //GiftCardLedger.get(getActivity()).addCard(newCard);
-
-                    // return intent to the calling activity with the results of the card add
-                    /*Intent returnIntent = new Intent();
-                    returnIntent.putExtra(EXTRA_ADD, newCard.getId());
-                    getActivity().setResult(Activity.RESULT_OK, returnIntent);*/
-
-                    // end the activity
-                    //getActivity().finish();
                 }
             }
-        });
+        });*/
 
         return v;
     }

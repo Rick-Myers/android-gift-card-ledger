@@ -14,6 +14,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -29,6 +31,7 @@ import com.rickmyers.giftcardledger.utilities.PictureUtils;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -50,6 +53,9 @@ public class GiftCardEditFragment extends Fragment {
     private File mPhotoFile;
     private Point mPhotoViewDimensions;
     private Callbacks mCallbacks;
+
+    private RecyclerView mCardRecyclerView;
+    private HistoryAdapter mAdapter;
 
     public interface Callbacks{
         void onGiftCardUpdated(GiftCard card);
@@ -95,6 +101,9 @@ public class GiftCardEditFragment extends Fragment {
 
         PackageManager packageManager = getActivity().getPackageManager();
 
+        mCardRecyclerView = view.findViewById(R.id.history_recycler_view);
+        setupHistoryRecycler();
+
         mNameTextView = view.findViewById(R.id.card_name);
         mNameTextView.setText(mGiftCard.getName());
 
@@ -124,6 +133,14 @@ public class GiftCardEditFragment extends Fragment {
         setupPhotoView(view, packageManager);
 
         return view;
+    }
+
+    private void setupHistoryRecycler() {
+        mCardRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        if (mAdapter == null) {
+            mAdapter = new HistoryAdapter(mGiftCard.getHistory());
+            mCardRecyclerView.setAdapter(mAdapter);
+        }
     }
 
     private void setupPhotoView(View view, PackageManager packageManager) {
@@ -231,5 +248,61 @@ public class GiftCardEditFragment extends Fragment {
             mPhotoView.setImageBitmap(bitmap);
             mPhotoView.setContentDescription(getString(R.string.card_photo_image_description));
         }
+    }
+
+
+    private class HistoryHolder extends RecyclerView.ViewHolder {
+
+        private TextView mDateTextView;
+        private TextView mBalanceTextView;
+        private List<String> mHistory;
+
+        public HistoryHolder(LayoutInflater inflater, ViewGroup parent, HistoryAdapter testAdapter) {
+            super(inflater.inflate(R.layout.list_item_card, parent, false));
+
+            mDateTextView = itemView.findViewById(R.id.card_date);
+            mBalanceTextView = itemView.findViewById(R.id.card_balance);
+        }
+
+        public void bind(List<String> history) {
+            mHistory = history;
+            mDateTextView.setText(mHistory.get(0));
+            BigDecimal balance = new BigDecimal(mHistory.get(1));
+            mBalanceTextView.setText(GiftCard.getFormattedBalance(balance));
+        }
+
+    }
+
+    /**
+     * A {@link RecyclerView.Adapter} for {@link GiftCard}
+     */
+    private class HistoryAdapter extends RecyclerView.Adapter<HistoryHolder> {
+        private List<List<String>> mHistory;
+
+        public HistoryAdapter(List<List<String>> history) {
+            mHistory = history;
+        }
+
+        @NonNull
+        @Override
+        public HistoryHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+            LayoutInflater layoutinflater = LayoutInflater.from(getActivity());
+            return new HistoryHolder(layoutinflater, viewGroup, this);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull HistoryHolder historyHolder, int i) {
+            List<String> history = mHistory.get(i);
+            historyHolder.bind(history);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mHistory.size();
+        }
+
+        /*public void updateList(List<GiftCard> cards) {
+            mGiftCards = cards;
+        }*/
     }
 }

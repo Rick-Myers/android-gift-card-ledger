@@ -1,8 +1,11 @@
 package com.rickmyers.giftcardledger;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -15,14 +18,19 @@ public class GiftCard {
 
     private UUID mId;
     private String mName;
-    private Date mStartDate;
-    private BigDecimal mBalance, mStartBalance;
+    //private Date mStartDate;
+    private BigDecimal mBalance; //mStartBalance;
+    private List<List<String>> mHistory;
+    private String mHistoryTableName;
 
     /**
      * Class constructor
      */
-    public GiftCard() {
-        this(UUID.randomUUID());
+    public GiftCard(String name, BigDecimal startBalance) {
+        this(name,
+                startBalance,
+                UUID.randomUUID(),
+                "History_" + new Date().getTime());
     }
 
     /**
@@ -30,10 +38,34 @@ public class GiftCard {
      *
      * @param id the existing {@link UUID}
      */
-    public GiftCard(UUID id) {
+/*    public GiftCard(UUID id) {
         mId = id;
-        mStartDate = new Date();
+        //mStartDate = new Date();
+    }*/
+    public GiftCard(String name, BigDecimal balance, UUID id, String historyTableName) {
+        mId = id;
+        mName = name;
+        mBalance = balance;
+        //mHistory = history;
+        mHistoryTableName = historyTableName;
     }
+
+    public static String dateFormatter() {
+        return DateFormat.getDateInstance(DateFormat.MEDIUM).format(new Date());
+    }
+
+    public List<List<String>> getHistory() {
+        return mHistory;
+    }
+
+    public void setHistory(List<List<String>> history) {
+        mHistory = history;
+    }
+
+    /*public void appendHistory(String newHistory){
+        mHistory += newHistory;
+    }*/
+
 
     /**
      * Returns the gift card's {@link UUID}
@@ -65,16 +97,16 @@ public class GiftCard {
     /**
      * Returns the {@link Date} that the gift card was created on.
      *
-     * @return      the creation date
+     * @return the creation date
      */
-    public Date getStartDate() {
+    /*public Date getStartDate() {
         return mStartDate;
-    }
+    }*/
 
     /**
      * Returns the {@link BigDecimal} representation of the gift card's <i>current</i> balance.
      *
-     * @return      the current balance of the gift card.
+     * @return the current balance of the gift card.
      */
     public BigDecimal getBalance() {
         return mBalance;
@@ -92,20 +124,20 @@ public class GiftCard {
     /**
      * Returns the {@link BigDecimal} representation of the gift card's <i>starting</i> balance.
      *
-     * @return      the starting balance of the gift card.
+     * @return the starting balance of the gift card.
      */
-    public BigDecimal getStartBalance() {
+/*    public BigDecimal getStartBalance() {
         return mStartBalance;
-    }
+    }*/
 
     /**
      * Sets the <i>starting</i> balance of the gift card.
      *
      * @param startBalance
      */
-    public void setStartBalance(BigDecimal startBalance) {
+/*    public void setStartBalance(BigDecimal startBalance) {
         mStartBalance = startBalance;
-    }
+    }*/
 
     /**
      * Converts a given {@link BigDecimal} into the correct currency per the device's
@@ -125,8 +157,12 @@ public class GiftCard {
      *
      * @return a unique file name
      */
-    public String getPhotoFilename(){
+    public String getPhotoFilename() {
         return "IMG_" + getId().toString() + ".jpg";
+    }
+
+    public String getHistoryTableName() {
+        return mHistoryTableName;
     }
 
 }

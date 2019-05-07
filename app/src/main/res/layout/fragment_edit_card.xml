@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" android:layout_margin="16dp">
+    android:layout_height="match_parent"
+    android:layout_margin="16dp">
 
     <TextView
         android:id="@+id/card_name_label"
@@ -16,11 +16,11 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:labelFor="@+id/card_name"
         android:text="@string/card_name_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:labelFor="@+id/card_name"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/card_name"
@@ -44,11 +44,11 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginRight="8dp"
+        android:labelFor="@+id/card_balance_edit"
         android:text="@string/card_balance_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_name"
-        android:labelFor="@+id/card_balance_edit"/>
+        app:layout_constraintTop_toBottomOf="@+id/card_name" />
 
     <EditText
         android:id="@+id/card_balance_edit"
@@ -59,34 +59,63 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:autofillHints="New Balance"
         android:hint="@string/card_balance_hint"
+        android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_balance"
-        android:inputType="numberDecimal"
-        android:autofillHints="New Balance"/>
+        app:layout_constraintTop_toBottomOf="@+id/card_balance" />
 
     <ImageView
         android:id="@+id/card_picture"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:scaleType="centerInside"
-        android:cropToPadding="true"
         android:background="@color/j_light_grey"
+        android:contentDescription="@string/card_photo_no_image_description"
+        android:cropToPadding="true"
+        android:focusable="true"
+        android:scaleType="centerInside"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_balance_edit"
-        android:contentDescription="@string/card_photo_no_image_description"
-        android:focusable="true"/>
+        app:layout_constraintTop_toBottomOf="@+id/card_balance_edit" />
 
     <ImageButton
         android:id="@+id/button_take_picture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/card_photo_button_description"
         android:src="@android:drawable/ic_menu_camera"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_picture"
-        android:contentDescription="@string/card_photo_button_description"/>
+        app:layout_constraintTop_toBottomOf="@+id/card_picture" />
+
+    <TextView
+        android:id="@+id/transaction_label"
+        style="?android:listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:labelFor="@+id/card_balance_edit"
+        android:text="@string/transaction_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_take_picture" />
+
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/history_recycler_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/transaction_label" />
 
 </android.support.constraint.ConstraintLayout>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.rickmyers.giftcardledger.GiftCard;
 import com.rickmyers.giftcardledger.database.GiftCardDbSchema.GiftCardTable;
 
 /**
@@ -12,7 +13,8 @@ import com.rickmyers.giftcardledger.database.GiftCardDbSchema.GiftCardTable;
  * @author Rick Myers
  */
 public class GiftCardDBHelper extends SQLiteOpenHelper {
-    private static final int VERSION = 1;
+    //private static final int VERSION = 1;
+
     public static final String DATABASE_NAME = "gift_card.db";
 
     /**
@@ -21,7 +23,7 @@ public class GiftCardDBHelper extends SQLiteOpenHelper {
      * @param context the Application's context
      */
     public GiftCardDBHelper(Context context) {
-        super(context, DATABASE_NAME, null, VERSION);
+        super(context, DATABASE_NAME, null, GiftCardDbSchema.VERSION);
     }
 
     /**
@@ -37,7 +39,8 @@ public class GiftCardDBHelper extends SQLiteOpenHelper {
                 GiftCardTable.Cols.UUID + ", " +
                 GiftCardTable.Cols.NAME + ", " +
                 GiftCardTable.Cols.BALANCE + ", " +
-                GiftCardTable.Cols.START_DATE +
+                GiftCardTable.Cols.HISTORY + ", " +
+                GiftCardTable.Cols.HISTORY_TABLENAME +
                 ")"
         );
     }
@@ -53,4 +56,7 @@ public class GiftCardDBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
+
+
+
 }

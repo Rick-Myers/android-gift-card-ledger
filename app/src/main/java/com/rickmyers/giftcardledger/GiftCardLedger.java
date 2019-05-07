@@ -4,15 +4,22 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import com.rickmyers.giftcardledger.database.GiftCardCursorWrapper;
+import com.rickmyers.giftcardledger.database.GiftCardDbSchema;
 import com.rickmyers.giftcardledger.database.GiftCardDbSchema.GiftCardTable;
+import com.rickmyers.giftcardledger.database.GiftCardDbSchema.HistoryTable;
 import com.rickmyers.giftcardledger.database.GiftCardDBHelper;
+import com.rickmyers.giftcardledger.database.HistoryCursorWrapper;
+import com.rickmyers.giftcardledger.database.HistoryDBHelper;
 
 /**
  * A gift card ledger. This singleton holds the current state of the ledger and provides persistence.
@@ -26,6 +33,8 @@ public class GiftCardLedger {
 
     private Context mContext;
     private SQLiteDatabase mDatabase;
+
+    private String mdate;
 
 
     /**
@@ -58,8 +67,23 @@ public class GiftCardLedger {
      * @param card the {@link GiftCard} to be added
      */
     public void addCard(GiftCard card) {
+        // Create gift card content values and insert new card into DB
         ContentValues values = getContentValues(card);
         mDatabase.insert(GiftCardTable.NAME, null, values);
+
+        // Create gift card history table and content values and insert values into history database
+        createHistoryTable(card);
+        ContentValues history_values = getHistoryContentValues(card);
+        mDatabase.insert(card.getHistoryTableName(), null, history_values);
+    }
+
+    private void createHistoryTable(GiftCard card) {
+        String query = "create table " + card.getHistoryTableName() + "(" +
+                " _id integer primary key autoincrement, " +
+                HistoryTable.Cols.DATE + ", " +
+                HistoryTable.Cols.BALANCE +
+                ")";
+        mDatabase.execSQL(query);
     }
 
     /**
@@ -77,15 +101,54 @@ public class GiftCardLedger {
         try {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                cards.add(cursor.getGiftCard());
+                GiftCard temp = cursor.getGiftCard();
+                try {
+                    List<List<String>> tempHistory = getHistoryList(temp);
+                    temp.setHistory(tempHistory);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                cards.add(temp);
                 cursor.moveToNext();
             }
         } finally {
             cursor.close();
         }
 
+        /*for (GiftCard x: cards){
+            try {
+                List<List<String>> history = getHistoryList(x);
+                x.setHistory(history);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+
+        }*/
+
         return cards;
     }
+
+
+    public List<List<String>> getHistoryList(GiftCard card) {
+        // create a new list
+        List<List<String>> history = new ArrayList<>();
+        // query database for all rows
+        GiftCardCursorWrapper cursor = queryHistory(null, null, card);
+
+        // try to move through rows and add history to list
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                history.add(cursor.getHistory());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+        // returns all transactions made on gift card
+        return history;
+    }
+
 
     /**
      * Query database for a {@link GiftCard} entry
@@ -106,7 +169,12 @@ public class GiftCardLedger {
                 return null;
             }
             cursor.moveToFirst();
-            return cursor.getGiftCard();
+            //todo testing
+            GiftCard card = cursor.getGiftCard();
+            List<List<String>> cardHistory = getHistoryList(card);
+            card.setHistory(cardHistory);
+            return card;
+            //return cursor.getGiftCard();
         } finally {
             cursor.close();
         }
@@ -146,10 +214,19 @@ public class GiftCardLedger {
         values.put(GiftCardTable.Cols.UUID, card.getId().toString());
         values.put(GiftCardTable.Cols.NAME, card.getName());
         values.put(GiftCardTable.Cols.BALANCE, card.getBalance().toString());
-        values.put(GiftCardTable.Cols.START_DATE, card.getStartDate().toString());
+        values.put(GiftCardTable.Cols.HISTORY_TABLENAME, card.getHistoryTableName());
 
         return values;
     }
+
+    private static ContentValues getHistoryContentValues(GiftCard card) {
+        ContentValues values = new ContentValues();
+        values.put(HistoryTable.Cols.DATE, GiftCard.dateFormatter());
+        values.put(HistoryTable.Cols.BALANCE, card.getBalance().toString());
+
+        return values;
+    }
+
 
     /**
      * Returns a {@link GiftCardCursorWrapper} that can be used to easily parse data returned from the database.
@@ -161,6 +238,19 @@ public class GiftCardLedger {
     private GiftCardCursorWrapper queryGiftCards(String whereClause, String[] whereArgs) {
         Cursor cursor = mDatabase.query(
                 GiftCardTable.NAME,
+                null, //Select * columns
+                whereClause,
+                whereArgs,
+                null,
+                null,
+                null
+        );
+        return new GiftCardCursorWrapper(cursor);
+    }
+
+    private GiftCardCursorWrapper queryHistory(String whereClause, String[] whereArgs, GiftCard card) {
+        Cursor cursor = mDatabase.query(
+                card.getHistoryTableName(),
                 null, //Select * columns
                 whereClause,
                 whereArgs,

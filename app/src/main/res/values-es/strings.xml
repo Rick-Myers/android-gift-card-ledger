@@ -24,4 +24,6 @@
     <string name="card_photo_button_description">" Toma una foto de tu tarjeta de regalo."</string>
     <string name="card_photo_no_image_description">" Foto de tarjeta de regalo (no establecida)"</string>
     <string name="card_photo_image_description">" Foto de tarjeta de regalo (set)"</string>
+    <string name="save">Salvar</string>
+    <string name="transaction_label">Historial de transacciones</string>
 </resources>
