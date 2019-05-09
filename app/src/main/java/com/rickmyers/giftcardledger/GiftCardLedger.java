@@ -186,7 +186,13 @@ public class GiftCardLedger {
      * @param id the UUID of the card to be removed.
      */
     public void removeGiftCard(UUID id) {
+        GiftCard card = getGiftCard(id);
+
+        String query = "DROP TABLE IF EXISTS " + card.getHistoryTableName();
+        mDatabase.execSQL(query);
+
         mDatabase.delete(GiftCardTable.NAME, GiftCardTable.Cols.UUID + " = ?", new String[]{id.toString()});
+
     }
 
     /**
