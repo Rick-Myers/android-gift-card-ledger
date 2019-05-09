@@ -23,6 +23,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -64,9 +66,9 @@ public class GiftCardEditFragment extends Fragment {
     private File mPhotoFile;
     private Point mPhotoViewDimensions;
     private Callbacks mCallbacks;
-    private Button mSaveButton;
-    private RadioButton mAddButton;
-    private RadioButton mSubtractButton;
+    private Button mAddDeductButton;
+    private RadioButton mAddRadioButton;
+    private RadioButton mSubtractRadioButton;
 
     private RecyclerView mCardRecyclerView;
     private HistoryAdapter mAdapter;
@@ -122,75 +124,62 @@ public class GiftCardEditFragment extends Fragment {
         mNameTextView.setText(mGiftCard.getName());
         mBalanceEditText = view.findViewById(R.id.card_balance_edit);
 
-        mAddButton = view.findViewById(R.id.add_radio_button);
+        mAddRadioButton = view.findViewById(R.id.add_radio_button);
 
-        if (mAddButton.isChecked()){
-            mSaveButton.setText(R.string.add);
-        }
-        mAddButton.setOnClickListener(new View.OnClickListener() {
+        mAddRadioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSaveButton.setText(R.string.add);
+                mAddDeductButton.setText(R.string.add);
             }
         });
 
-        mSubtractButton = view.findViewById(R.id.subtract_radio_button);
-        mSubtractButton.setOnClickListener(new View.OnClickListener() {
+        mSubtractRadioButton = view.findViewById(R.id.subtract_radio_button);
+        mSubtractRadioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSaveButton.setText(R.string.deduct);
+                mAddDeductButton.setText(R.string.deduct);
             }
         });
 
-
-
-
-
-        mSaveButton = view.findViewById(R.id.button_update_balance);
-        mSaveButton.setOnClickListener(new View.OnClickListener() {
+        mAddDeductButton = view.findViewById(R.id.button_update_balance);
+        mAddDeductButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // todo provide better validation for input, also use a try/catch
                 CharSequence s = mBalanceEditText.getText();
-                BigDecimalValidator validator = CurrencyValidator.getInstance();
-                BigDecimal amount = validator.validate(s.toString());
-                Log.d(TAG, amount.toString());
+                if (s.length() <= 0){ }
+                else {
+                    BigDecimalValidator validator = CurrencyValidator.getInstance();
+                    BigDecimal amount = validator.validate(s.toString());
+                    Log.d(TAG, amount.toString());
 
-                if (amount == null)
-                    mBalanceEditText.setText("0");
-                else
-                    mBalanceEditText.setText(amount.toString());
-                    mGiftCard.setBalance(amount);
-                updateGiftCard();
-            }
+                    if (amount == null)
+                        clearEditText();
+                    else {
+                        if (mSubtractRadioButton.isChecked()){
+                            mGiftCard.subtractFromBalance(amount);
+                        } else {
+                            mGiftCard.addToBalance(amount);
+                        }
+
+                        GiftCardEditFragment.this.clearEditText();
+                        Log.d(TAG, Integer.toString(mAdapter.getItemCount()));
+                        clearEditText();
+                        updateGiftCard();
+                    }
+                }
+             }
         });
 
-
-        /*mBalanceEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                // todo provide better validation for input, also use a try/catch
-                if (s.length() > 0)
-                    mGiftCard.setBalance(new BigDecimal(s.toString()));
-                else
-                    mGiftCard.setBalance(new BigDecimal(0));
-                updateGiftCard();
-            }
-        });*/
-
-        mBalanceEditText.setText(mGiftCard.getBalance().toString());
 
         setupPhotoView(view, packageManager);
 
         return view;
+    }
+
+    private void clearEditText() {
+        mBalanceEditText.getText().clear();
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mBalanceEditText.getWindowToken(), 0);
     }
 
     private void setupHistoryRecycler() {
@@ -294,7 +283,7 @@ public class GiftCardEditFragment extends Fragment {
         super.onPause();
         // Update the card with given data if possible
         // todo validate before updating
-        GiftCardLedger.get(getActivity()).updateGiftCard(mGiftCard);
+        //GiftCardLedger.get(getActivity()).updateGiftCard(mGiftCard);
     }
 
     private void updatePhotoView() {

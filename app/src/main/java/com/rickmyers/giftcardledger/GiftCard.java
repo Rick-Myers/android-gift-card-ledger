@@ -34,19 +34,17 @@ public class GiftCard {
     }
 
     /**
-     * Class constructor specifying an existing UUID.
+     * Class constructor specifying an existing Gift card.
      *
-     * @param id the existing {@link UUID}
+     * @param name
+     * @param balance
+     * @param id
+     * @param historyTableName
      */
-/*    public GiftCard(UUID id) {
-        mId = id;
-        //mStartDate = new Date();
-    }*/
     public GiftCard(String name, BigDecimal balance, UUID id, String historyTableName) {
         mId = id;
         mName = name;
         mBalance = balance;
-        //mHistory = history;
         mHistoryTableName = historyTableName;
     }
 
@@ -62,9 +60,33 @@ public class GiftCard {
         mHistory = history;
     }
 
-    /*public void appendHistory(String newHistory){
-        mHistory += newHistory;
-    }*/
+    public void appendHistory(List<String> newHistory){
+        mHistory.add(newHistory);
+    }
+
+    public BigDecimal subtractFromBalance(BigDecimal value){
+        mBalance = mBalance.subtract(value);
+        //Gift card balances can't be negative, how would that work?
+        if (mBalance.compareTo(new BigDecimal(0)) < 0)
+        {
+            mBalance = new BigDecimal(0);
+        }
+        createHistoryTransaction();
+        return mBalance;
+    }
+
+    public BigDecimal addToBalance(BigDecimal value){
+        mBalance = mBalance.add(value);
+        createHistoryTransaction();
+        return mBalance;
+    }
+
+    private void createHistoryTransaction() {
+        List<String> newHistory = new ArrayList<>();
+        newHistory.add(dateFormatter());
+        newHistory.add(mBalance.toString());
+        appendHistory(newHistory);
+    }
 
 
     /**

@@ -4,7 +4,8 @@
     <string name="card_name_label">Name</string>
     <string name="card_name_hint">Enter the gift card name.</string>
     <string name="card_balance_label">Edit Balance</string>
-    <string name="card_balance_hint">Enter the current balance.</string>
+    <string name="card_balance_hint">Add / Deduct here!</string>
+    <string name="card_add_balance_hint">Enter Balance</string>
     <string name="card_history_label">History</string>
     <string name="card_number_label">Number</string>
     <string name="card_number_hint">Enter the gift card number.</string>

@@ -35,7 +35,9 @@
                 android:text="Card Name"
                 android:textColor="@color/j_dark"
                 android:textSize="18sp"
-                app:fontFamily="@font/copperplate_gothic_bold_regular" />
+                app:fontFamily="@font/copperplate_gothic_bold_regular"
+                android:paddingLeft="8dp"
+                android:paddingVertical="8dp"/>
 
             <TextView
                 android:id="@+id/card_balance"
@@ -44,7 +46,8 @@
                 android:text="Card Balance"
                 android:textColor="@color/j_light_blue"
                 android:textSize="18sp"
-                app:fontFamily="@font/copperplate_gothic_bold_regular" />
+                app:fontFamily="@font/copperplate_gothic_bold_regular"
+                android:paddingLeft="8dp"/>
 
 
         </LinearLayout>

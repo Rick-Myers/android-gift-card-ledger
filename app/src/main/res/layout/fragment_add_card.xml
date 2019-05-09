@@ -42,7 +42,7 @@
         android:id="@+id/card_balance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/card_balance_hint"
+        android:hint="@string/card_add_balance_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:inputType="numberDecimal"

@@ -4,7 +4,7 @@
     <string name="action_settings">Ajustes</string>
     <string name="card_name_hint">" Ingrese el nombre de la tarjeta de regalo."</string>
     <string name="card_balance_label">Editar Balance</string>
-    <string name="card_balance_hint">Ingrese el saldo actual.</string>
+    <string name="card_balance_hint">Añadir / Deducir aquí!</string>
     <string name="card_history_label">" Historia"</string>
     <string name="card_number_label">" Número"</string>
     <string name="card_number_hint">" Ingrese el número de tarjeta de regalo."</string>
@@ -28,4 +28,5 @@
     <string name="transaction_label">Historial de transacciones</string>
     <string name="add">Añadir</string>
     <string name="deduct">Deducir</string>
+    <string name="card_add_balance_hint">" Ingresar saldo"</string>
 </resources>

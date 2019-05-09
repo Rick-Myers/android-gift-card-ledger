@@ -201,6 +201,10 @@ public class GiftCardLedger {
         mDatabase.update(GiftCardTable.NAME, values,
                 GiftCardTable.Cols.UUID + " = ?",
                 new String[]{uuidString});
+
+        String tableName = card.getHistoryTableName();
+        ContentValues historyValues = getHistoryContentValues(card);
+        mDatabase.insert(tableName, null, historyValues);
     }
 
     /**
