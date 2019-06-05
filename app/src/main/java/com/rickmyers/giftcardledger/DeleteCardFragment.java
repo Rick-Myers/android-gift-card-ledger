@@ -51,6 +51,7 @@ public class DeleteCardFragment extends AppCompatDialogFragment {
 
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.card_delete_question)
+                .setMessage(card.getName())
                 .setPositiveButton(R.string.ok_button, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
