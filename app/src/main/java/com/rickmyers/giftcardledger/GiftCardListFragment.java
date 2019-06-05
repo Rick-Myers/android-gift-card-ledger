@@ -3,6 +3,7 @@ package com.rickmyers.giftcardledger;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,8 +24,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -102,6 +105,7 @@ public class GiftCardListFragment extends Fragment {
 
         mEmptyView = view.findViewById(R.id.empty_view);
 
+        // if two panes are used, the up arrow is not needed
         disableUpIfTwoPane();
 
         // todo remove and use Options menu
@@ -179,11 +183,6 @@ public class GiftCardListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.new_card:
-                /*// start GiftCardAddActivity and wait for result
-                Intent intent = new Intent(getActivity(), GiftCardAddActivity.class);
-                startActivityForResult(intent, REQUEST_ADD);*/
-
-                //testing callbacks
                 mCallbacks.onGiftCardAdd();
                 return true;
             case R.id.show_subtitle:
@@ -348,6 +347,9 @@ public class GiftCardListFragment extends Fragment {
         private TextView mBalanceTextView;
         private GiftCard mGiftCard;
 
+        //
+        private ImageView mImageView;
+
 
 
         public GiftCardHolder(LayoutInflater inflater, ViewGroup parent, GiftCardAdapter testAdapter) {
@@ -356,6 +358,7 @@ public class GiftCardListFragment extends Fragment {
 
             mNameTextView = itemView.findViewById(R.id.card_name);
             mBalanceTextView = itemView.findViewById(R.id.card_balance);
+            mImageView = itemView.findViewById(R.id.dollar_image);
         }
 
         /**
@@ -367,6 +370,14 @@ public class GiftCardListFragment extends Fragment {
             mGiftCard = card;
             mNameTextView.setText(mGiftCard.getName());
             mBalanceTextView.setText(GiftCard.getFormattedBalance(mGiftCard.getBalance()));
+
+            int test = card.getBalance().toBigInteger().intValue();
+            if(test > 50){
+                mImageView.setColorFilter(getResources().getColor(R.color.j_green));
+            } else if(test >= 25 && test <= 50){
+                mImageView.setColorFilter(getResources().getColor(R.color.j_yellow));
+            } else if (test < 25)
+                mImageView.setColorFilter(getResources().getColor(R.color.j_red));
         }
 
         @Override
@@ -375,7 +386,6 @@ public class GiftCardListFragment extends Fragment {
             // updated
             //Intent intent = GiftCardPagerActivity.newIntent(getActivity(), mGiftCard.getId());
             mLastUpdatedIndex = this.getAdapterPosition();
-            //startActivity(intent);
             mCallbacks.onGiftCardSelected(mGiftCard);
         }
     }
