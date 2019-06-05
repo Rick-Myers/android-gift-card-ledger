@@ -10,7 +10,8 @@ tools:context=".GiftCardAddActivity">
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/card_recycler_view"
     android:layout_height="match_parent"
-    android:layout_width="match_parent"/>
+    android:layout_width="match_parent"
+    android:background="@color/j_light_grey"/>
 
     <TextView
         android:id="@+id/empty_view"
@@ -18,7 +19,8 @@ tools:context=".GiftCardAddActivity">
         android:layout_height="match_parent"
         android:gravity="center"
         android:visibility="gone"
-        android:text="@string/no_data_available" />
+        android:text="@string/no_data_available"
+        android:textSize="@dimen/big_text"/>
 
 <!--<android.support.design.widget.FloatingActionButton
     android:id="@+id/fab"
