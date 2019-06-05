@@ -9,45 +9,69 @@
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        card_view:cardBackgroundColor="@color/j_light_grey"
-        card_view:cardCornerRadius="12dp">
+        card_view:cardBackgroundColor="@color/j_white"
+        card_view:cardCornerRadius="12dp"
+        card_view:cardElevation="6dp"
+        card_view:cardUseCompatPadding="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal"
 
-            <TextView
-                android:id="@+id/card_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:text="Card Name"
-                android:textColor="@color/j_dark"
-                android:textSize="18sp"
-                app:fontFamily="@font/copperplate_gothic_bold_regular"
-                android:paddingLeft="8dp"
-                android:paddingVertical="8dp"/>
+            >
 
-            <TextView
-                android:id="@+id/card_balance"
+            <ImageView
+                android:id="@+id/dollar_image"
+                android:layout_width="20dp"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:tag="image_tag"
+                android:src="@drawable/ic_money_white"
+                android:layout_gravity="center_vertical"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"/>
+
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Card Balance"
-                android:textColor="@color/j_light_blue"
-                android:textSize="18sp"
-                app:fontFamily="@font/copperplate_gothic_bold_regular"
-                android:paddingLeft="8dp"/>
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:id="@+id/card_info_layout">
+
+                <TextView
+                    android:id="@+id/card_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Card Name"
+                    android:textColor="@color/j_dark"
+                    android:textSize="18sp"
+                    android:gravity="center_horizontal"
+                    app:fontFamily="@font/copperplate_gothic_bold_regular"
+                    card_view:layout_constraintEnd_toEndOf="parent"
+                    card_view:layout_constraintStart_toStartOf="parent"
+                    card_view:layout_constraintTop_toTopOf="@id/card_info_layout"
+                    card_view:layout_constraintBottom_toTopOf="@id/card_balance"/>
+
+                <TextView
+                    android:id="@+id/card_balance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Card Balance"
+                    android:textColor="@color/j_light_blue"
+                    android:textSize="18sp"
+                    android:gravity="center_horizontal"
+                    app:fontFamily="@font/copperplate_gothic_bold_regular"
+                    card_view:layout_constraintEnd_toEndOf="parent"
+                    card_view:layout_constraintStart_toStartOf="parent"
+                    card_view:layout_constraintTop_toBottomOf="@id/card_name"
+                    card_view:layout_constraintBottom_toBottomOf="@id/card_info_layout"/>
+
+            </android.support.constraint.ConstraintLayout>
 
 
         </LinearLayout>
