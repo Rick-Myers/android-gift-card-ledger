@@ -55,16 +55,18 @@ public class GiftCardEditFragment extends Fragment {
     private static final String TAG = "GiftCardEditFragment";
 
     private static final String ARG_CARD_ID = "card_id";
-    private static final int REQUEST_PHOTO = 0;
+    /*private static final int REQUEST_PHOTO = 0;
     private static final String DIALOG_IMAGE = "DialogImage";
-
-    private TextView mNameTextView;
-    private EditText mBalanceEditText;
-    private GiftCard mGiftCard;
     private ImageButton mPhotoButton;
     private ImageView mPhotoView;
     private File mPhotoFile;
-    private Point mPhotoViewDimensions;
+    private Point mPhotoViewDimensions;*/
+
+    private TextView mNameTextView;
+    private TextView mBalanceTextView;
+    private EditText mBalanceEditText;
+    private GiftCard mGiftCard;
+
     private Callbacks mCallbacks;
     private Button mAddDeductButton;
     private RadioButton mAddRadioButton;
@@ -99,7 +101,7 @@ public class GiftCardEditFragment extends Fragment {
         super.onCreate(savedInstanceState);
         UUID cardID = (UUID) getArguments().getSerializable(ARG_CARD_ID);
         mGiftCard = GiftCardLedger.get(getActivity()).getGiftCard(cardID);
-        mPhotoFile = GiftCardLedger.get(getActivity()).getPhotoFile(mGiftCard);
+        /*mPhotoFile = GiftCardLedger.get(getActivity()).getPhotoFile(mGiftCard);*/
     }
 
     /**
@@ -122,6 +124,10 @@ public class GiftCardEditFragment extends Fragment {
 
         mNameTextView = view.findViewById(R.id.card_name);
         mNameTextView.setText(mGiftCard.getName());
+
+        mBalanceTextView = view.findViewById(R.id.card_balance);
+        mBalanceTextView.setText(GiftCard.getFormattedBalance(mGiftCard.getBalance()));
+
         mBalanceEditText = view.findViewById(R.id.card_balance_edit);
 
         mAddRadioButton = view.findViewById(R.id.add_radio_button);
@@ -171,7 +177,7 @@ public class GiftCardEditFragment extends Fragment {
         });
 
 
-        setupPhotoView(view, packageManager);
+        /*setupPhotoView(view, packageManager);*/
 
         return view;
     }
@@ -190,7 +196,7 @@ public class GiftCardEditFragment extends Fragment {
         }
     }
 
-    private void setupPhotoView(View view, PackageManager packageManager) {
+    /*private void setupPhotoView(View view, PackageManager packageManager) {
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         mPhotoView = view.findViewById(R.id.card_picture);
@@ -238,7 +244,7 @@ public class GiftCardEditFragment extends Fragment {
                 }
             }
         });
-    }
+    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -246,13 +252,13 @@ public class GiftCardEditFragment extends Fragment {
             return;
         }
 
-        if(requestCode == REQUEST_PHOTO){
+        /*if(requestCode == REQUEST_PHOTO){
             Uri uri = FileProvider.getUriForFile(getActivity(), "com.rickmyers.giftcardledger.fileprovider", mPhotoFile);
 
             getActivity().revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
             updatePhotoView();
-        }
+        }*/
     }
 
     private void updateGiftCard() {
@@ -286,7 +292,7 @@ public class GiftCardEditFragment extends Fragment {
         //GiftCardLedger.get(getActivity()).updateGiftCard(mGiftCard);
     }
 
-    private void updatePhotoView() {
+    /*private void updatePhotoView() {
         if (mPhotoFile == null || !mPhotoFile.exists()) {
             mPhotoView.setImageDrawable(null);
             mPhotoView.setContentDescription(getString(R.string.card_photo_no_image_description));
@@ -295,7 +301,7 @@ public class GiftCardEditFragment extends Fragment {
             mPhotoView.setImageBitmap(bitmap);
             mPhotoView.setContentDescription(getString(R.string.card_photo_image_description));
         }
-    }
+    }*/
 
 
     private class HistoryHolder extends RecyclerView.ViewHolder {

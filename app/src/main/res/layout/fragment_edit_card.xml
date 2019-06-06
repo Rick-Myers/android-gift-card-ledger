@@ -31,13 +31,44 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:textSize="@dimen/big_text"
+        android:textColor="@color/j_dark"
         android:text="@string/card_name_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_name_label" />
 
     <TextView
+        android:id="@+id/card_balance_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?android:listSeparatorTextViewStyle"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_name"
+        android:text="@string/card_balance_label"
+
+        />
+
+    <TextView
         android:id="@+id/card_balance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:textSize="@dimen/big_text"
+        android:textColor="@color/j_dark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_balance_label"
+        android:text="@string/card_balance_label"/>
+
+    <TextView
+        android:id="@+id/card_edit_balance_label"
         style="?android:listSeparatorTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,10 +76,12 @@
         android:layout_marginTop="8dp"
         android:layout_marginRight="8dp"
         android:labelFor="@+id/card_balance_edit"
-        android:text="@string/card_balance_label"
+        android:text="@string/card_edit_balance_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_name" />
+        app:layout_constraintTop_toBottomOf="@+id/card_balance" />
+
+
 
     <LinearLayout
         android:id="@+id/edit_balance_layout"
@@ -57,7 +90,8 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_balance">
+        app:layout_constraintTop_toBottomOf="@+id/card_edit_balance_label"
+        android:layout_marginBottom="@dimen/fab_margin">
 
         <EditText
             android:id="@+id/card_balance_edit"
@@ -106,7 +140,7 @@
 
     </LinearLayout>
 
-    <ImageView
+    <!--<ImageView
         android:id="@+id/card_picture"
         android:layout_width="80dp"
         android:layout_height="80dp"
@@ -118,7 +152,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_balance_layout"/>
-        <!--app:layout_constraintTop_toBottomOf="@+id/card_balance_edit" />-->
+
 
     <ImageButton
         android:id="@+id/button_take_picture"
@@ -128,7 +162,7 @@
         android:src="@android:drawable/ic_menu_camera"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_picture" />
+        app:layout_constraintTop_toBottomOf="@+id/card_picture" />-->
 
     <TextView
         android:id="@+id/transaction_label"
@@ -137,28 +171,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginTop="@dimen/fab_margin"
         android:labelFor="@+id/card_balance_edit"
         android:text="@string/transaction_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_take_picture" />
-
-    <!--<LinearLayout
-        android:id="@+id/recycler_view_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/transaction_label">-->
+        app:layout_constraintTop_toBottomOf="@+id/edit_balance_layout" />
 
     <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/history_recycler_view"
@@ -174,9 +194,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/transaction_label" />
-
-    <!--</LinearLayout>-->
-
-
 
 </android.support.constraint.ConstraintLayout>
