@@ -271,14 +271,14 @@ public class GiftCardLedger {
         return new GiftCardCursorWrapper(cursor);
     }
 
-    /**
+/*    *//**
      * Returns the gift card's photo
      *
      * @param card the gift card
      * @return the gift card's photo
-     */
+     *//*
     public File getPhotoFile(GiftCard card){
         File filesDir = mContext.getFilesDir();
         return new File(filesDir, card.getPhotoFilename());
-    }
+    }*/
 }

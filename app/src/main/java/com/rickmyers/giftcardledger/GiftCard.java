@@ -174,14 +174,14 @@ public class GiftCard {
         return currencyFormatter.format(balance);
     }
 
-    /**
+/*    *//**
      * Returns a unique file name to be used for saving gift card photos.
      *
      * @return a unique file name
-     */
+     *//*
     public String getPhotoFilename() {
         return "IMG_" + getId().toString() + ".jpg";
-    }
+    }*/
 
     public String getHistoryTableName() {
         return mHistoryTableName;
