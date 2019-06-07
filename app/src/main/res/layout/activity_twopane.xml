@@ -8,7 +8,8 @@
     android:divider="?android:dividerHorizontal"
     android:showDividers="middle"
     tools:showIn="@layout/twofragment_main"
-    tools:context=".GiftCardAddActivity">
+    tools:context=".GiftCardAddActivity"
+    android:background="@color/j_light_grey">
 
     <FrameLayout
         android:id="@+id/fragment_container"
