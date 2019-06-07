@@ -189,11 +189,12 @@ public class GiftCardEditFragment extends Fragment {
     }
 
     private void setupHistoryRecycler() {
-        mCardRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         if (mAdapter == null) {
             mAdapter = new HistoryAdapter(mGiftCard.getHistory());
             mCardRecyclerView.setAdapter(mAdapter);
         }
+        mCardRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     /*private void setupPhotoView(View view, PackageManager packageManager) {
@@ -264,6 +265,7 @@ public class GiftCardEditFragment extends Fragment {
     private void updateGiftCard() {
         GiftCardLedger.get(getActivity()).updateGiftCard(mGiftCard);
         mCallbacks.onGiftCardUpdated(mGiftCard);
+        mBalanceTextView.setText(GiftCard.getFormattedBalance(mGiftCard.getBalance()));
     }
 
     /**
