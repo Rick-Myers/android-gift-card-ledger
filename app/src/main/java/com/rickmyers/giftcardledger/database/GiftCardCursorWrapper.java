@@ -33,7 +33,7 @@ public class GiftCardCursorWrapper extends CursorWrapper {
      * @return a new {@link GiftCard}
      */
     public GiftCard getGiftCard() {
-        // grab data from database
+        // grab card data from database
         String uuidString = getString(getColumnIndex(GiftCardTable.Cols.UUID));
         String name = getString(getColumnIndex(GiftCardTable.Cols.NAME));
         String balance = getString(getColumnIndex(GiftCardTable.Cols.BALANCE));
@@ -41,27 +41,26 @@ public class GiftCardCursorWrapper extends CursorWrapper {
 
         // create a card with data
         GiftCard card = new GiftCard(name, new BigDecimal(balance), UUID.fromString(uuidString), historyTable);
-        //card.setName(name);
-        //card.setBalance(new BigDecimal(balance));
 
-        // return card
         return card;
     }
 
     /**
      * Queries the database and returns a the transaction history for a specific {@link GiftCard}.
      *
-     * @return transaction history
+     * @return a list of transaction history
      */
     public List<String> getHistory() {
+        // grab transaction history from database
         String date = getString(getColumnIndex(GiftCardDbSchema.HistoryTable.Cols.DATE));
         String balance = getString(getColumnIndex(GiftCardDbSchema.HistoryTable.Cols.BALANCE));
 
-        List<String> temp = new ArrayList<>();
-        temp.add(date);
-        temp.add(balance);
+        // create a list with history
+        List<String> history = new ArrayList<>();
+        history.add(date);
+        history.add(balance);
 
-        // return list
-        return temp;
+        // return transaction history list
+        return history;
     }
 }
