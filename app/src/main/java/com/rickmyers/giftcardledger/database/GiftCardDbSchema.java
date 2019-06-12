@@ -7,15 +7,16 @@ package com.rickmyers.giftcardledger.database;
  */
 public class GiftCardDbSchema {
     public static final int VERSION = 1;
+
     /**
-     * Defines the name of the table.
+     * Defines the name of the main table where all gift cards are stored.
      */
     public static final class GiftCardTable {
 
         public static final String NAME = "gift_cards";
 
         /**
-         * Defines the name of the columns in the table.
+         * Defines the name of the columns in the gift card table.
          */
         public static final class Cols {
             public static final String UUID = "uuid";
@@ -26,7 +27,14 @@ public class GiftCardDbSchema {
         }
     }
 
+    /**
+     * Defines the name history table.
+     */
     public static final class HistoryTable {
+
+        /**
+         * Defines the name of the columns in the history table.
+         */
         public static final class Cols {
             public static final String DATE = "date";
             public static final String BALANCE = "balance";
