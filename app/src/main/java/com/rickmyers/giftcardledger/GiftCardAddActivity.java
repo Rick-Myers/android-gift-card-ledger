@@ -11,6 +11,7 @@ import android.util.Log;
  * @author Rick Myers
  */
 public class GiftCardAddActivity extends SingleFragmentActivity implements GiftCardAddFragment.Callbacks {
+
     // logging tag
     private static final String TAG = "GiftCardAddActivity";
 

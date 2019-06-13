@@ -55,23 +55,14 @@ public class GiftCardEditFragment extends Fragment {
     private static final String TAG = "GiftCardEditFragment";
 
     private static final String ARG_CARD_ID = "card_id";
-    /*private static final int REQUEST_PHOTO = 0;
-    private static final String DIALOG_IMAGE = "DialogImage";
-    private ImageButton mPhotoButton;
-    private ImageView mPhotoView;
-    private File mPhotoFile;
-    private Point mPhotoViewDimensions;*/
-
     private TextView mNameTextView;
     private TextView mBalanceTextView;
     private EditText mBalanceEditText;
     private GiftCard mGiftCard;
-
     private Callbacks mCallbacks;
     private Button mAddDeductButton;
     private RadioButton mAddRadioButton;
     private RadioButton mSubtractRadioButton;
-
     private RecyclerView mCardRecyclerView;
     private HistoryAdapter mAdapter;
 
@@ -101,7 +92,6 @@ public class GiftCardEditFragment extends Fragment {
         super.onCreate(savedInstanceState);
         UUID cardID = (UUID) getArguments().getSerializable(ARG_CARD_ID);
         mGiftCard = GiftCardLedger.get(getActivity()).getGiftCard(cardID);
-        /*mPhotoFile = GiftCardLedger.get(getActivity()).getPhotoFile(mGiftCard);*/
     }
 
     /**
@@ -117,8 +107,6 @@ public class GiftCardEditFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_edit_card, container, false);
 
-        PackageManager packageManager = getActivity().getPackageManager();
-
         mCardRecyclerView = view.findViewById(R.id.history_recycler_view);
         setupHistoryRecycler();
 
@@ -131,7 +119,6 @@ public class GiftCardEditFragment extends Fragment {
         mBalanceEditText = view.findViewById(R.id.card_balance_edit);
 
         mAddRadioButton = view.findViewById(R.id.add_radio_button);
-
         mAddRadioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -176,92 +163,43 @@ public class GiftCardEditFragment extends Fragment {
              }
         });
 
-
-        /*setupPhotoView(view, packageManager);*/
-
         return view;
     }
 
+    /**
+     * Clears the test in the edit text view while also insuring that the soft keyboard is hidden.
+     */
     private void clearEditText() {
         mBalanceEditText.getText().clear();
+        //hide soft keyboard after text is cleared
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mBalanceEditText.getWindowToken(), 0);
     }
 
+    /**
+     * Checks to see if the history recycler adapter exists. If it does not, one is created.
+     */
     private void setupHistoryRecycler() {
 
         if (mAdapter == null) {
             mAdapter = new HistoryAdapter(mGiftCard.getHistory());
             mCardRecyclerView.setAdapter(mAdapter);
         }
+        // todo Does this need to be outside of the flow control?
         mCardRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
-
-    /*private void setupPhotoView(View view, PackageManager packageManager) {
-        final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        mPhotoView = view.findViewById(R.id.card_picture);
-        mPhotoButton = view.findViewById(R.id.button_take_picture);
-
-        boolean canTakePhoto = mPhotoFile != null && captureImage.resolveActivity(packageManager) != null;
-        mPhotoButton.setEnabled(canTakePhoto);
-
-        if (canTakePhoto) {
-            Uri uri = FileProvider.getUriForFile(getActivity(), "com.rickmyers.giftcardledger.fileprovider", mPhotoFile);
-
-            captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-        }
-
-        mPhotoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(captureImage, REQUEST_PHOTO);
-            }
-        });
-
-        ViewTreeObserver observer = mPhotoView.getViewTreeObserver();
-        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                mPhotoViewDimensions = new Point();
-                mPhotoViewDimensions.set(mPhotoView.getWidth(), mPhotoView.getHeight());
-
-                updatePhotoView();
-                mPhotoView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-            }
-        });
-
-        mPhotoView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if(mPhotoFile!= null && mPhotoFile.exists())
-                {
-                    FragmentManager fragmentManager = getFragmentManager();
-
-                    ImagePreviewFragment.newInstance(mPhotoFile).show(fragmentManager, DIALOG_IMAGE);
-                }
-            }
-        });
-    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK){
             return;
         }
-
-        /*if(requestCode == REQUEST_PHOTO){
-            Uri uri = FileProvider.getUriForFile(getActivity(), "com.rickmyers.giftcardledger.fileprovider", mPhotoFile);
-
-            getActivity().revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-
-            updatePhotoView();
-        }*/
     }
 
+    /**
+     * Updates gift card value in the ledger, card list, and text view when a transaction
+     * is completed.
+     */
     private void updateGiftCard() {
         GiftCardLedger.get(getActivity()).updateGiftCard(mGiftCard);
         mCallbacks.onGiftCardUpdated(mGiftCard);
@@ -289,22 +227,7 @@ public class GiftCardEditFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        // Update the card with given data if possible
-        // todo validate before updating
-        //GiftCardLedger.get(getActivity()).updateGiftCard(mGiftCard);
-    }
-
-    /*private void updatePhotoView() {
-        if (mPhotoFile == null || !mPhotoFile.exists()) {
-            mPhotoView.setImageDrawable(null);
-            mPhotoView.setContentDescription(getString(R.string.card_photo_no_image_description));
-        } else {
-            Bitmap bitmap = (mPhotoViewDimensions == null) ? PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity()) : PictureUtils.getScaledBitmap(mPhotoFile.getPath(), mPhotoViewDimensions.x, mPhotoViewDimensions.y);
-            mPhotoView.setImageBitmap(bitmap);
-            mPhotoView.setContentDescription(getString(R.string.card_photo_image_description));
-        }
-    }*/
-
+     }
 
     private class HistoryHolder extends RecyclerView.ViewHolder {
 

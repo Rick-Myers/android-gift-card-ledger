@@ -18,8 +18,7 @@ public class GiftCard {
 
     private UUID mId;
     private String mName;
-    //private Date mStartDate;
-    private BigDecimal mBalance; //mStartBalance;
+    private BigDecimal mBalance;
     private List<List<String>> mHistory;
     private String mHistoryTableName;
 
@@ -36,10 +35,10 @@ public class GiftCard {
     /**
      * Class constructor specifying an existing Gift card.
      *
-     * @param name
-     * @param balance
-     * @param id
-     * @param historyTableName
+     * @param name the name of the card
+     * @param balance the balance on the card.
+     * @param id unique UUID used for identifying cards
+     * @param historyTableName name of the card's transaction history table
      */
     public GiftCard(String name, BigDecimal balance, UUID id, String historyTableName) {
         mId = id;
@@ -48,22 +47,48 @@ public class GiftCard {
         mHistoryTableName = historyTableName;
     }
 
+    /**
+     * Returns date formatted.
+     *
+     * @return Date formatted to be Month/Day/Year ex. Jan 1, 2019
+     */
     public static String dateFormatter() {
         return DateFormat.getDateInstance(DateFormat.MEDIUM).format(new Date());
     }
 
+    /**
+     * Transaction history getter.
+     *
+     * @return transaction history list
+     */
     public List<List<String>> getHistory() {
         return mHistory;
     }
 
+    /**
+     * Transaction history setter.
+     *
+     * @param history list of lists that contain transaction history
+     */
     public void setHistory(List<List<String>> history) {
         mHistory = history;
     }
 
+    /**
+     * Appends a new history string to the current list of transaction history.
+     *
+     * @param newHistory latest list of strings of transaction history
+     */
     public void appendHistory(List<String> newHistory){
         mHistory.add(newHistory);
     }
 
+    /**
+     * Decreases current balance.
+     *
+     * @param value {@link BigDecimal} to be subtracted from current balance.
+     * @return current balance if chaining is needed.
+     */
     public BigDecimal subtractFromBalance(BigDecimal value){
         mBalance = mBalance.subtract(value);
         //Gift card balances can't be negative, how would that work?
@@ -75,19 +100,28 @@ public class GiftCard {
         return mBalance;
     }
 
+    /**
+     * Increases current balance.
+     *
+     * @param value {@link BigDecimal} to be added to current balance.
+     * @return current balance if chaining is needed.
+     */
     public BigDecimal addToBalance(BigDecimal value){
         mBalance = mBalance.add(value);
         createHistoryTransaction();
         return mBalance;
     }
 
+    /**
+     * Creates a list of string that contains the data needed to represent a transaction
+     * when the card's balance is increased or decreased.
+     */
     private void createHistoryTransaction() {
         List<String> newHistory = new ArrayList<>();
         newHistory.add(dateFormatter());
         newHistory.add(mBalance.toString());
         appendHistory(newHistory);
     }
-
 
     /**
      * Returns the gift card's {@link UUID}
@@ -117,15 +151,6 @@ public class GiftCard {
     }
 
     /**
-     * Returns the {@link Date} that the gift card was created on.
-     *
-     * @return the creation date
-     */
-    /*public Date getStartDate() {
-        return mStartDate;
-    }*/
-
-    /**
      * Returns the {@link BigDecimal} representation of the gift card's <i>current</i> balance.
      *
      * @return the current balance of the gift card.
@@ -144,24 +169,6 @@ public class GiftCard {
     }
 
     /**
-     * Returns the {@link BigDecimal} representation of the gift card's <i>starting</i> balance.
-     *
-     * @return the starting balance of the gift card.
-     */
-/*    public BigDecimal getStartBalance() {
-        return mStartBalance;
-    }*/
-
-    /**
-     * Sets the <i>starting</i> balance of the gift card.
-     *
-     * @param startBalance
-     */
-/*    public void setStartBalance(BigDecimal startBalance) {
-        mStartBalance = startBalance;
-    }*/
-
-    /**
      * Converts a given {@link BigDecimal} into the correct currency per the device's
      * {@link Locale}.
      *
@@ -174,15 +181,11 @@ public class GiftCard {
         return currencyFormatter.format(balance);
     }
 
-/*    *//**
-     * Returns a unique file name to be used for saving gift card photos.
+    /**
+     * Returns the name of the card'd history table.
      *
-     * @return a unique file name
-     *//*
-    public String getPhotoFilename() {
-        return "IMG_" + getId().toString() + ".jpg";
-    }*/
-
+     * @return the name of the card's history table.
+     */
     public String getHistoryTableName() {
         return mHistoryTableName;
     }

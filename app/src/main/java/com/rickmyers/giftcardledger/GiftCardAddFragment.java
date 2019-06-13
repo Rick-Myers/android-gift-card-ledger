@@ -35,8 +35,6 @@ public class GiftCardAddFragment extends Fragment {
     private EditText mName;
     private EditText mBalance;
     private Button mSaveButton;
-    //private FloatingActionButton mFab;
-
     private Callbacks mCallbacks;
 
     public interface Callbacks{
@@ -55,6 +53,10 @@ public class GiftCardAddFragment extends Fragment {
         mCallbacks = null;
     }
 
+    /**
+     * Calls back to hosting activity to handle adding a new card.
+     * @param card a new {@link GiftCard}
+     */
     private void addGiftCard(GiftCard card){
         mCallbacks.onGiftCardAdded(card);
     }
@@ -86,29 +88,16 @@ public class GiftCardAddFragment extends Fragment {
             }
         });
 
+        // Up button is not used if tablet or larger screens are active.
         disableUpIfTwoPane();
-
-        /*// todo perhaps a reference to activity isn't needed.
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        ActionBar ab = activity.getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);*/
-
-        /*// todo perhaps add a save button to the menu instead of using FAB?
-        mFab = getActivity().findViewById(R.id.fab);
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // todo validate this data!
-                if (mBalance.getText().length() > 0 && mName.getText() != null) {
-                    GiftCard newCard = new GiftCard(mName.getText().toString(), new BigDecimal(mBalance.getText().toString()));
-                    addGiftCard(newCard);
-                }
-            }
-        });*/
 
         return v;
     }
 
+    /**
+     * Disables the "Up" button for larger screens. On larger screens, a two pane window is used
+     * and the card list is always visible. There is no need to go "Up".
+     */
     private void disableUpIfTwoPane() {
         // Get which view group is inflated by the activity
         final ViewGroup viewGroup = (ViewGroup) ((ViewGroup)getActivity().findViewById(android.R.id.content)).getChildAt(0);

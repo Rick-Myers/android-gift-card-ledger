@@ -4,22 +4,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
-import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import com.rickmyers.giftcardledger.database.GiftCardCursorWrapper;
-import com.rickmyers.giftcardledger.database.GiftCardDbSchema;
 import com.rickmyers.giftcardledger.database.GiftCardDbSchema.GiftCardTable;
 import com.rickmyers.giftcardledger.database.GiftCardDbSchema.HistoryTable;
 import com.rickmyers.giftcardledger.database.GiftCardDBHelper;
-import com.rickmyers.giftcardledger.database.HistoryCursorWrapper;
-import com.rickmyers.giftcardledger.database.HistoryDBHelper;
 
 /**
  * A gift card ledger. This singleton holds the current state of the ledger and provides persistence.
@@ -33,8 +26,6 @@ public class GiftCardLedger {
 
     private Context mContext;
     private SQLiteDatabase mDatabase;
-
-    private String mdate;
 
 
     /**
@@ -115,20 +106,15 @@ public class GiftCardLedger {
             cursor.close();
         }
 
-        /*for (GiftCard x: cards){
-            try {
-                List<List<String>> history = getHistoryList(x);
-                x.setHistory(history);
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-
-        }*/
-
         return cards;
     }
 
-
+    /**
+     * Returns the full list of transaction history for the {@link GiftCard}
+     *
+     * @param card the gift card that is being used to request transaction history
+     * @return a list of lists containing transaction history
+     */
     public List<List<String>> getHistoryList(GiftCard card) {
         // create a new list
         List<List<String>> history = new ArrayList<>();
@@ -169,12 +155,10 @@ public class GiftCardLedger {
                 return null;
             }
             cursor.moveToFirst();
-            //todo testing
             GiftCard card = cursor.getGiftCard();
             List<List<String>> cardHistory = getHistoryList(card);
             card.setHistory(cardHistory);
             return card;
-            //return cursor.getGiftCard();
         } finally {
             cursor.close();
         }
@@ -188,9 +172,11 @@ public class GiftCardLedger {
     public void removeGiftCard(UUID id) {
         GiftCard card = getGiftCard(id);
 
+        //Drop the history transaction table for the card.
         String query = "DROP TABLE IF EXISTS " + card.getHistoryTableName();
         mDatabase.execSQL(query);
 
+        //Delete the row related to the card from the database.
         mDatabase.delete(GiftCardTable.NAME, GiftCardTable.Cols.UUID + " = ?", new String[]{id.toString()});
 
     }
@@ -214,7 +200,7 @@ public class GiftCardLedger {
     }
 
     /**
-     * Returns a {@link ContentValues} object that can be used to the column of any {@link GiftCard}.
+     * Returns a {@link ContentValues} object that can be used to store data in the database.
      *
      * @param card the {@link GiftCard} to be converted to a ContentValue object
      * @return a {@link ContentValues} object that can be used with the database.
@@ -229,6 +215,12 @@ public class GiftCardLedger {
         return values;
     }
 
+    /**
+     * Returns a {@link ContentValues} object that can be used to access data within the database.
+     *
+     * @param card the {@link GiftCard} to be converted to a ContentValue object
+     * @return a {@link ContentValues} object that can be used with the database.
+     */
     private static ContentValues getHistoryContentValues(GiftCard card) {
         ContentValues values = new ContentValues();
         values.put(HistoryTable.Cols.DATE, GiftCard.dateFormatter());
@@ -258,6 +250,13 @@ public class GiftCardLedger {
         return new GiftCardCursorWrapper(cursor);
     }
 
+    /**
+     * Returns a {@link GiftCardCursorWrapper} that can be used to easily parse data returned from the database.
+     *
+     * @param whereClause the sqlite WHERE clause
+     * @param whereArgs   the sqlite WHERE arguments
+     * @return a {@link GiftCardCursorWrapper}
+     */
     private GiftCardCursorWrapper queryHistory(String whereClause, String[] whereArgs, GiftCard card) {
         Cursor cursor = mDatabase.query(
                 card.getHistoryTableName(),
@@ -270,15 +269,4 @@ public class GiftCardLedger {
         );
         return new GiftCardCursorWrapper(cursor);
     }
-
-/*    *//**
-     * Returns the gift card's photo
-     *
-     * @param card the gift card
-     * @return the gift card's photo
-     *//*
-    public File getPhotoFile(GiftCard card){
-        File filesDir = mContext.getFilesDir();
-        return new File(filesDir, card.getPhotoFilename());
-    }*/
 }
