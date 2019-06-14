@@ -14,8 +14,8 @@
     <string name="ok_button">Ok</string>
     <string name="cancel_button">Cancel</string>
     <string name="new_card">New Card</string>
-    <string name="show_subtitle">Show Subtitle</string>
-    <string name="hide_subtitle">Hide Subtitle</string>
+    <string name="show_subtitle">Show Count</string>
+    <string name="hide_subtitle">Hide Count</string>
     <string name="image_preview">Preview</string>
     <string name="no_data_available">Add a gift card!</string>
     <string name="save">Save</string>
