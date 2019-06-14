@@ -1,8 +1,11 @@
 package com.rickmyers.giftcardledger;
 
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+
+import java.util.UUID;
 
 /**
  * The main view of the application. This is a list Activity that is responsible for creating the {@link GiftCardListFragment}.
@@ -16,6 +19,7 @@ public class GiftCardListActivity extends SingleFragmentActivity implements Gift
 
     // todo maybe make constants elsewhere if both fragment and activity use it.
     private static final int REQUEST_ADD = 1;
+    private GiftCardLedger mGiftCardLedger;
 
     @Override
     protected Fragment createFragment() {
@@ -29,6 +33,7 @@ public class GiftCardListActivity extends SingleFragmentActivity implements Gift
 
     @Override
     public void onGiftCardSelected(GiftCard card) {
+        Log.d(TAG, "onGiftCardSelected");
         if (findViewById(R.id.detail_fragment_container) == null) {
             Intent intent = GiftCardPagerActivity.newIntent(this, card.getId());
             startActivity(intent);
@@ -43,12 +48,19 @@ public class GiftCardListActivity extends SingleFragmentActivity implements Gift
 
     @Override
     public void onGiftCardUpdated(GiftCard card) {
+        Log.d(TAG, "onGiftCardUpdated");
         updateListUI();
     }
 
     @Override
-    public void onGiftCardAdd() {
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+    }
 
+    @Override
+    public void onGiftCardAdd() {
+        Log.d(TAG, "onGiftCardAdd");
         if (findViewById(R.id.detail_fragment_container) == null) {
             Intent intent = new Intent(this, GiftCardAddActivity.class);
             startActivityForResult(intent, REQUEST_ADD);
@@ -59,11 +71,10 @@ public class GiftCardListActivity extends SingleFragmentActivity implements Gift
                     .replace(R.id.detail_fragment_container, newDetail)
                     .commit();
         }
-
-        updateListUI();
     }
 
     private void updateListUI() {
+        Log.d(TAG, "updateListUI");
         GiftCardListFragment listFragment = (GiftCardListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         listFragment.updateUI();
     }
@@ -74,5 +85,22 @@ public class GiftCardListActivity extends SingleFragmentActivity implements Gift
         GiftCardLedger.get(this).addCard(card);
         onGiftCardSelected(card);
         updateListUI();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_ADD){
+            Log.d(TAG, "onActivityResult");
+            mGiftCardLedger = GiftCardLedger.get(this);
+            GiftCardListFragment listFragment = (GiftCardListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            UUID id = (UUID) data.getSerializableExtra(GiftCardAddFragment.EXTRA_ADD);
+            GiftCard card = mGiftCardLedger.getGiftCard(id);
+            if(mGiftCardLedger.getGiftCardList().isEmpty()){
+                listFragment.addCard(0, card);
+            } else {
+                listFragment.addCard(mGiftCardLedger.getGiftCardList().size() - 1, card);
+            }
+        }
     }
 }

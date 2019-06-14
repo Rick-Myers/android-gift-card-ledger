@@ -3,19 +3,15 @@ package com.rickmyers.giftcardledger;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,7 +23,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,6 +49,9 @@ public class GiftCardListFragment extends Fragment {
     private boolean mSubtitleVisible;
     private TextView mEmptyView;
     private Callbacks mCallbacks;
+
+    //testing
+    private List<GiftCard> mGiftCards;
 
     public interface Callbacks {
         void onGiftCardSelected(GiftCard card);
@@ -82,7 +80,9 @@ public class GiftCardListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
+        Log.d(TAG, "onCreate");
+        mGiftCardLedger = GiftCardLedger.get(getActivity());
+        mGiftCards = mGiftCardLedger.getGiftCardList();
     }
 
     /**
@@ -96,9 +96,9 @@ public class GiftCardListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_card_list, container, false);
+        Log.d(TAG, "onCreateView");
 
-        mGiftCardLedger = GiftCardLedger.get(getActivity());
+        View view = inflater.inflate(R.layout.fragment_card_list, container, false);
 
         mCardRecyclerView = view.findViewById(R.id.card_recycler_view);
         mCardRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -108,17 +108,6 @@ public class GiftCardListFragment extends Fragment {
         // if two panes are used, the up arrow is not needed
         disableUpIfTwoPane();
 
-        // todo remove and use Options menu
-        /*FloatingActionButton fab = view.findViewById(R.id.fab);
-        fab = getActivity().findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "I love you Janello!", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-*/
         // If the Bundle is not empty, set subtitle option accordingly
         if (savedInstanceState != null) {
             mSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
@@ -127,6 +116,44 @@ public class GiftCardListFragment extends Fragment {
         updateUI();
 
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart");
+
+        mGiftCardLedger = GiftCardLedger.get(getActivity());
+        mGiftCards = mGiftCardLedger.getGiftCardList();
+
+    }
+
+    /**
+     * Updates UI on Activity resume.
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+        updateUI();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
     }
 
     private void disableUpIfTwoPane() {
@@ -221,11 +248,9 @@ public class GiftCardListFragment extends Fragment {
      * updating positions based on other activities.
      */
     public void updateUI() {
-        mGiftCardLedger = GiftCardLedger.get(getActivity());
-        List<GiftCard> giftCards = mGiftCardLedger.getGiftCardList();
-
         if (mAdapter == null) {
-            mAdapter = new GiftCardAdapter(giftCards);
+            Log.d(TAG, "If - UpdateUI");
+            mAdapter = new GiftCardAdapter(mGiftCards);
             mCardRecyclerView.setAdapter(mAdapter);
 
             // setup slide to delete
@@ -238,11 +263,16 @@ public class GiftCardListFragment extends Fragment {
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                     FragmentManager manager = getFragmentManager();
+
                     // find which viewHolder was clicked
                     int clicked = viewHolder.getAdapterPosition();
                     // find the card that was clicked in the database
                     GiftCard card = mGiftCardLedger.getGiftCardList().get(clicked);
-                    // Call the delete card dialog to give the user option to delete the card
+
+                    // Setting which card was swiped
+                    mLastUpdatedIndex = clicked;
+
+                    // Call the delete card dialog to confirm deletion
                     DeleteCardFragment dialog = DeleteCardFragment.newInstance(card.getId());
                     dialog.setTargetFragment(GiftCardListFragment.this, REQUEST_DELETE);
                     dialog.show(manager, DIALOG_DELETE);
@@ -250,23 +280,14 @@ public class GiftCardListFragment extends Fragment {
             }).attachToRecyclerView(mCardRecyclerView);
 
         } else {
-            // todo This is lazy! Implement a way to update a list of items that were changed coming back to list activity.
             if (mLastUpdatedIndex > -1) {
+                Log.d(TAG, "Else - if in UpdateUI");
                 mAdapter.notifyItemChanged(mLastUpdatedIndex);
                 mLastUpdatedIndex = -1;
-                mAdapter.updateList(giftCards);
-                // todo This is lazy!
-                mAdapter.notifyDataSetChanged();
-            } else {
-                mAdapter.notifyItemChanged(0);
-                mAdapter.updateList(giftCards);
-                mAdapter.notifyDataSetChanged();
             }
-
         }
 
         updateEmptyView();
-
         updateSubtitle();
     }
 
@@ -293,49 +314,38 @@ public class GiftCardListFragment extends Fragment {
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "Request: " + requestCode + "Result: " + resultCode);
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.d(TAG, "Request: " + requestCode + " Result: " + resultCode);
 
         // Deletes card if user requested to delete during delete dialog
         if (requestCode == REQUEST_DELETE) {
             if (resultCode == Activity.RESULT_OK) {
-                UUID id = (UUID) data.getSerializableExtra(DeleteCardFragment.EXTRA_DELETE);
                 Log.d(TAG, "onActivityResult - Delete");
+                UUID id = (UUID) data.getSerializableExtra(DeleteCardFragment.EXTRA_DELETE);
                 mGiftCardLedger.removeGiftCard(id);
-                List<GiftCard> giftCards = mGiftCardLedger.getGiftCardList();
-                // todo only update the card that was added
-                mAdapter.updateList(giftCards);
-                mAdapter.notifyDataSetChanged();
+                mAdapter.removeCard(mLastUpdatedIndex);
+                updateEmptyView();
+            } else if (resultCode == Activity.RESULT_CANCELED){
                 updateUI();
             }
         }
 
-        // Adds new card if user saved a card in GiftCardAddActivity
-        if (requestCode == REQUEST_ADD) {
-            List<GiftCard> giftCards = mGiftCardLedger.getGiftCardList();
-            if (resultCode == Activity.RESULT_OK) {
-                Log.d(TAG, "onActivityResult - Add");
+        // Adds new card if user saved a new card in GiftCardAddActivity
+        if (requestCode == REQUEST_ADD && resultCode == Activity.RESULT_OK) {
+            Log.d(TAG, "onActivityResult - Add");
 
-                // todo only update the card that was added
-                UUID id = (UUID) data.getSerializableExtra(GiftCardAddFragment.EXTRA_ADD);
-                mAdapter.updateList(giftCards);
-                mAdapter.notifyDataSetChanged();
-            }
-
+            // get added card from EXTRA
+            UUID id = (UUID) data.getSerializableExtra(GiftCardAddFragment.EXTRA_ADD);
+            // add card to ledger
+            GiftCard card = mGiftCardLedger.getGiftCard(id);
+            // add to adapter
+            mAdapter.addCard(mGiftCards.size() - 1, card);
         }
-
-        //testing update when card not removed on swipe
-        updateUI();
-
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
-    /**
-     * Updates UI on Activity resume.
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateUI();
+    public void addCard(int position, GiftCard card){
+        mAdapter.addCard(position, card);
     }
 
     /**
@@ -346,8 +356,6 @@ public class GiftCardListFragment extends Fragment {
         private TextView mNameTextView;
         private TextView mBalanceTextView;
         private GiftCard mGiftCard;
-
-        //
         private ImageView mImageView;
 
 
@@ -382,9 +390,6 @@ public class GiftCardListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            // starts intent to edit the card that was clicked. also sets this position as the last
-            // updated
-            //Intent intent = GiftCardPagerActivity.newIntent(getActivity(), mGiftCard.getId());
             mLastUpdatedIndex = this.getAdapterPosition();
             mCallbacks.onGiftCardSelected(mGiftCard);
         }
@@ -418,8 +423,14 @@ public class GiftCardListFragment extends Fragment {
             return mGiftCards.size();
         }
 
-        public void updateList(List<GiftCard> cards) {
-            mGiftCards = cards;
+        public void removeCard(int position){
+            mGiftCards.remove(position);
+            notifyItemRemoved(position);
+        }
+
+        public void addCard(int position, GiftCard card){
+            mGiftCards.add(card);
+            notifyItemInserted(position);
         }
     }
 
