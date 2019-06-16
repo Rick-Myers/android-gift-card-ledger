@@ -63,9 +63,6 @@ public class GiftCardListActivity extends SingleFragmentActivity implements Gift
     @Override
     public void onGiftCardUpdated(GiftCard card) {
         Log.d(TAG, "onGiftCardUpdated");
-        //updateListUI();
-
-        // testing
         GiftCardListFragment listFragment = (GiftCardListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         listFragment.updateList(mLastSelected);
 
