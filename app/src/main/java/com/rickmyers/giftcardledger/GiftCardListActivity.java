@@ -33,23 +33,8 @@ public class GiftCardListActivity extends SingleFragmentActivity implements Gift
     }
 
     @Override
-    public void onGiftCardSelected(GiftCard card) {
+    public void onGiftCardSelected(GiftCard card, int position) {
         Log.d(TAG, "onGiftCardSelected");
-        if (findViewById(R.id.detail_fragment_container) == null) {
-            Intent intent = GiftCardPagerActivity.newIntent(this, card.getId());
-            startActivity(intent);
-        } else {
-            Fragment newDetail = GiftCardEditFragment.newInstance(card.getId());
-
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.detail_fragment_container, newDetail)
-                    .commit();
-        }
-    }
-
-    @Override
-    public void onGiftCardSelectedx(GiftCard card, int position) {
-        Log.d(TAG, "onGiftCardSelectedx");
         if (findViewById(R.id.detail_fragment_container) == null) {
             Intent intent = GiftCardPagerActivity.newIntent(this, card.getId());
             startActivity(intent);
@@ -127,7 +112,7 @@ public class GiftCardListActivity extends SingleFragmentActivity implements Gift
             listFragment.addCard(mGiftCardLedger.getGiftCardList().size() - 1, card);
             position = mGiftCardLedger.getGiftCardList().size() - 1;
         }
-        onGiftCardSelectedx(card, position);
+        onGiftCardSelected(card, position);
         updateListUI();
     }
 
