@@ -20,6 +20,7 @@ public class GiftCardListActivity extends SingleFragmentActivity implements Gift
     // todo maybe make constants elsewhere if both fragment and activity use it.
     private static final int REQUEST_ADD = 1;
     private GiftCardLedger mGiftCardLedger;
+    private int mLastSelected = -1;
 
     @Override
     protected Fragment createFragment() {
@@ -47,9 +48,42 @@ public class GiftCardListActivity extends SingleFragmentActivity implements Gift
     }
 
     @Override
+    public void onGiftCardSelectedx(GiftCard card, int position) {
+        Log.d(TAG, "onGiftCardSelectedx");
+        if (findViewById(R.id.detail_fragment_container) == null) {
+            Intent intent = GiftCardPagerActivity.newIntent(this, card.getId());
+            startActivity(intent);
+        } else {
+            Fragment newDetail = GiftCardEditFragment.newInstance(card.getId());
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.detail_fragment_container, newDetail)
+                    .commit();
+        }
+
+        mLastSelected = position;
+    }
+
+    @Override
+    public void onGiftCardDeleted() {
+        if (findViewById(R.id.detail_fragment_container) != null){
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.detail_fragment_container);
+            if(fragment != null){
+                getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+            }
+        }
+
+    }
+
+    @Override
     public void onGiftCardUpdated(GiftCard card) {
         Log.d(TAG, "onGiftCardUpdated");
-        updateListUI();
+        //updateListUI();
+
+        // testing
+        GiftCardListFragment listFragment = (GiftCardListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        listFragment.updateList(mLastSelected);
+
     }
 
     @Override
@@ -82,8 +116,18 @@ public class GiftCardListActivity extends SingleFragmentActivity implements Gift
     @Override
     public void onGiftCardAdded(GiftCard card) {
         Log.d(TAG, "onGiftCardAdded");
+        mGiftCardLedger = GiftCardLedger.get(this);
         GiftCardLedger.get(this).addCard(card);
-        onGiftCardSelected(card);
+        GiftCardListFragment listFragment = (GiftCardListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        int position;
+        if(mGiftCardLedger.getGiftCardList().isEmpty()){
+            listFragment.addCard(0, card);
+            position = 0;
+        } else {
+            listFragment.addCard(mGiftCardLedger.getGiftCardList().size() - 1, card);
+            position = mGiftCardLedger.getGiftCardList().size() - 1;
+        }
+        onGiftCardSelectedx(card, position);
         updateListUI();
     }
 

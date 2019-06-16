@@ -56,6 +56,10 @@ public class GiftCardListFragment extends Fragment {
     public interface Callbacks {
         void onGiftCardSelected(GiftCard card);
         void onGiftCardAdd();
+
+        //testing
+        void onGiftCardSelectedx(GiftCard card, int position);
+        void onGiftCardDeleted();
     }
 
 
@@ -243,6 +247,13 @@ public class GiftCardListFragment extends Fragment {
         activity.getSupportActionBar().setSubtitle(subtitle);
     }
 
+    public void updateList(int pos){
+        mGiftCards = mGiftCardLedger.getGiftCardList();
+        //mAdapter.updateList(mGiftCards);
+        mAdapter.notifyItemChanged(pos);
+        Log.d(TAG, "updateList");
+    }
+
     /**
      * Insures the UI is up to date. Responsible for setting up the recycler view adapter and
      * updating positions based on other activities.
@@ -326,6 +337,9 @@ public class GiftCardListFragment extends Fragment {
                 mGiftCardLedger.removeGiftCard(id);
                 mAdapter.removeCard(mLastUpdatedIndex);
                 updateEmptyView();
+
+                //testing
+                mCallbacks.onGiftCardDeleted();
             } else if (resultCode == Activity.RESULT_CANCELED){
                 updateUI();
             }
@@ -391,7 +405,10 @@ public class GiftCardListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             mLastUpdatedIndex = this.getAdapterPosition();
-            mCallbacks.onGiftCardSelected(mGiftCard);
+            //mCallbacks.onGiftCardSelected(mGiftCard);
+
+            //testing
+            mCallbacks.onGiftCardSelectedx(mGiftCard, mLastUpdatedIndex);
         }
     }
 
@@ -399,10 +416,10 @@ public class GiftCardListFragment extends Fragment {
      * A {@link RecyclerView.Adapter} for {@link GiftCard}
      */
     private class GiftCardAdapter extends RecyclerView.Adapter<GiftCardHolder> {
-        private List<GiftCard> mGiftCards;
+        //private List<GiftCard> mGiftCards;
 
         public GiftCardAdapter(List<GiftCard> cards) {
-            mGiftCards = cards;
+            //mGiftCards = cards;
         }
 
         @NonNull
@@ -432,6 +449,10 @@ public class GiftCardListFragment extends Fragment {
             mGiftCards.add(card);
             notifyItemInserted(position);
         }
+
+        /*public void updateList(List<GiftCard> cards){
+            this.mGiftCards = cards;
+        }*/
     }
 
 
