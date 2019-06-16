@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,11 +55,10 @@ public class GiftCardListFragment extends Fragment {
     private List<GiftCard> mGiftCards;
 
     public interface Callbacks {
-        void onGiftCardSelected(GiftCard card);
+        void onGiftCardSelected(GiftCard card, int position);
         void onGiftCardAdd();
 
         //testing
-        void onGiftCardSelectedx(GiftCard card, int position);
         void onGiftCardDeleted();
     }
 
@@ -265,10 +265,19 @@ public class GiftCardListFragment extends Fragment {
             mCardRecyclerView.setAdapter(mAdapter);
 
             // setup slide to delete
-            new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {
+
+                @Override
+                public boolean isLongPressDragEnabled() {
+                    return true;
+                }
+
                 @Override
                 public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
-                    return false;
+
+                    mAdapter.onItemMove(viewHolder.getAdapterPosition(), viewHolder1.getAdapterPosition());
+
+                    return true;
                 }
 
                 @Override
@@ -405,10 +414,7 @@ public class GiftCardListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             mLastUpdatedIndex = this.getAdapterPosition();
-            //mCallbacks.onGiftCardSelected(mGiftCard);
-
-            //testing
-            mCallbacks.onGiftCardSelectedx(mGiftCard, mLastUpdatedIndex);
+            mCallbacks.onGiftCardSelected(mGiftCard, mLastUpdatedIndex);
         }
     }
 
@@ -448,6 +454,20 @@ public class GiftCardListFragment extends Fragment {
         public void addCard(int position, GiftCard card){
             mGiftCards.add(card);
             notifyItemInserted(position);
+        }
+
+        public boolean onItemMove(int fromPosition, int toPosition){
+            if (fromPosition < toPosition) {
+                for (int i = fromPosition; i < toPosition; i++) {
+                    Collections.swap(mGiftCards, i, i + 1);
+                }
+            } else {
+                for (int i = fromPosition; i > toPosition; i--) {
+                    Collections.swap(mGiftCards, i, i - 1);
+                }
+            }
+            notifyItemMoved(fromPosition, toPosition);
+            return true;
         }
 
         /*public void updateList(List<GiftCard> cards){
