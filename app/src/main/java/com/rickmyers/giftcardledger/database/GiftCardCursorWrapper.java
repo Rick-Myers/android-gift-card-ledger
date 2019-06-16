@@ -53,11 +53,13 @@ public class GiftCardCursorWrapper extends CursorWrapper {
     public List<String> getHistory() {
         // grab transaction history from database
         String date = getString(getColumnIndex(GiftCardDbSchema.HistoryTable.Cols.DATE));
+        String transac = getString(getColumnIndex(GiftCardDbSchema.HistoryTable.Cols.TRANSAC));
         String balance = getString(getColumnIndex(GiftCardDbSchema.HistoryTable.Cols.BALANCE));
 
         // create a list with history
         List<String> history = new ArrayList<>();
         history.add(date);
+        history.add(transac);
         history.add(balance);
 
         // return transaction history list

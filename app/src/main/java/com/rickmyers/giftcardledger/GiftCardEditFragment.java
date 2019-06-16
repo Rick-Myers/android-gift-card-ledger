@@ -232,20 +232,33 @@ public class GiftCardEditFragment extends Fragment {
     private class HistoryHolder extends RecyclerView.ViewHolder {
 
         private TextView mDateTextView;
+        private TextView mTransacTextView;
         private TextView mBalanceTextView;
         private List<String> mHistory;
 
         public HistoryHolder(LayoutInflater inflater, ViewGroup parent, HistoryAdapter testAdapter) {
-            super(inflater.inflate(R.layout.list_item_card, parent, false));
+            super(inflater.inflate(R.layout.list_history_card, parent, false));
 
             mDateTextView = itemView.findViewById(R.id.card_date);
+            mTransacTextView = itemView.findViewById(R.id.card_transac);
             mBalanceTextView = itemView.findViewById(R.id.card_balance);
         }
 
         public void bind(List<String> history) {
             mHistory = history;
+            // set date
             mDateTextView.setText(mHistory.get(0));
-            BigDecimal balance = new BigDecimal(mHistory.get(1));
+            // set transaction
+            String transac = mHistory.get(1);
+            char neg = '-';
+            mTransacTextView.setText(transac);
+            if (transac.charAt(0) == neg){
+                mTransacTextView.setTextColor(getResources().getColor(R.color.j_red));
+            } else {
+                mTransacTextView.setTextColor(getResources().getColor(R.color.j_green));
+            }
+            // set balance
+            BigDecimal balance = new BigDecimal(mHistory.get(2));
             mBalanceTextView.setText(GiftCard.getFormattedBalance(balance));
         }
 

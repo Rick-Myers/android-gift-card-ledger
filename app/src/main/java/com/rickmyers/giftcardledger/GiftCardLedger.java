@@ -72,6 +72,7 @@ public class GiftCardLedger {
         String query = "create table " + card.getHistoryTableName() + "(" +
                 " _id integer primary key autoincrement, " +
                 HistoryTable.Cols.DATE + ", " +
+                HistoryTable.Cols.TRANSAC + ", " +
                 HistoryTable.Cols.BALANCE +
                 ")";
         mDatabase.execSQL(query);
@@ -216,7 +217,7 @@ public class GiftCardLedger {
     }
 
     /**
-     * Returns a {@link ContentValues} object that can be used to access data within the database.
+     * Returns a {@link ContentValues} object that can be used to store data in the database.
      *
      * @param card the {@link GiftCard} to be converted to a ContentValue object
      * @return a {@link ContentValues} object that can be used with the database.
@@ -224,6 +225,7 @@ public class GiftCardLedger {
     private static ContentValues getHistoryContentValues(GiftCard card) {
         ContentValues values = new ContentValues();
         values.put(HistoryTable.Cols.DATE, GiftCard.dateFormatter());
+        values.put(HistoryTable.Cols.TRANSAC, card.getLastTransac());
         values.put(HistoryTable.Cols.BALANCE, card.getBalance().toString());
 
         return values;
@@ -231,7 +233,7 @@ public class GiftCardLedger {
 
 
     /**
-     * Returns a {@link GiftCardCursorWrapper} that can be used to easily parse data returned from the database.
+     * Returns a {@link GiftCardCursorWrapper} that can be used to parse data returned from the database.
      *
      * @param whereClause the sqlite WHERE clause
      * @param whereArgs   the sqlite WHERE arguments
@@ -251,7 +253,7 @@ public class GiftCardLedger {
     }
 
     /**
-     * Returns a {@link GiftCardCursorWrapper} that can be used to easily parse data returned from the database.
+     * Returns a {@link GiftCardCursorWrapper} that can be used to parse data returned from the database.
      *
      * @param whereClause the sqlite WHERE clause
      * @param whereArgs   the sqlite WHERE arguments

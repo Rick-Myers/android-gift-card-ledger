@@ -37,6 +37,7 @@ public class GiftCardDbSchema {
          */
         public static final class Cols {
             public static final String DATE = "date";
+            public static final String TRANSAC = "transac";
             public static final String BALANCE = "balance";
         }
     }

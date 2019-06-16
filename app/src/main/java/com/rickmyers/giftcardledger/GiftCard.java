@@ -21,6 +21,7 @@ public class GiftCard {
     private BigDecimal mBalance;
     private List<List<String>> mHistory;
     private String mHistoryTableName;
+    private String mLastTransac;
 
     /**
      * Class constructor
@@ -44,6 +45,7 @@ public class GiftCard {
         mId = id;
         mName = name;
         mBalance = balance;
+        mLastTransac = "+" + getFormattedBalance(balance);
         mHistoryTableName = historyTableName;
     }
 
@@ -96,7 +98,8 @@ public class GiftCard {
         {
             mBalance = new BigDecimal(0);
         }
-        createHistoryTransaction();
+        mLastTransac = "-" + getFormattedBalance(value);
+        createHistoryTransaction(mLastTransac);
         return mBalance;
     }
 
@@ -108,7 +111,8 @@ public class GiftCard {
      */
     public BigDecimal addToBalance(BigDecimal value){
         mBalance = mBalance.add(value);
-        createHistoryTransaction();
+        mLastTransac = "+" + getFormattedBalance(value);
+        createHistoryTransaction(mLastTransac);
         return mBalance;
     }
 
@@ -116,9 +120,10 @@ public class GiftCard {
      * Creates a list of string that contains the data needed to represent a transaction
      * when the card's balance is increased or decreased.
      */
-    private void createHistoryTransaction() {
+    private void createHistoryTransaction(String transac) {
         List<String> newHistory = new ArrayList<>();
         newHistory.add(dateFormatter());
+        newHistory.add(transac);
         newHistory.add(mBalance.toString());
         appendHistory(newHistory);
     }
@@ -157,6 +162,10 @@ public class GiftCard {
      */
     public BigDecimal getBalance() {
         return mBalance;
+    }
+
+    public String getLastTransac(){
+        return mLastTransac;
     }
 
     /**
