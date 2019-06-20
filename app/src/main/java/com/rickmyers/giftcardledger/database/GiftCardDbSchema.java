@@ -36,6 +36,7 @@ public class GiftCardDbSchema {
          * Defines the name of the columns in the history table.
          */
         public static final class Cols {
+            public static final String ID = "_id";
             public static final String DATE = "date";
             public static final String TRANSAC = "transac";
             public static final String BALANCE = "balance";

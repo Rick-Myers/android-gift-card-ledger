@@ -30,4 +30,6 @@
     <string name="deduct">Deducir</string>
     <string name="card_add_balance_hint">" Ingresar saldo"</string>
     <string name="card_edit_balance_label">Editar Balance</string>
+    <string name="undo">Deshacer</string>
+    <string name="undo_last">¿Deshacer la última transacción?</string>
 </resources>

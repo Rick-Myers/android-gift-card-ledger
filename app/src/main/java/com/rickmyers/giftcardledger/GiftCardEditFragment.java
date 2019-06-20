@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
@@ -158,12 +159,37 @@ public class GiftCardEditFragment extends Fragment {
                         Log.d(TAG, Integer.toString(mAdapter.getItemCount()));
                         clearEditText();
                         updateGiftCard();
+                        showUndoSnackbar();
                     }
                 }
              }
         });
 
         return view;
+    }
+
+    private void showUndoSnackbar(){
+        View view = getActivity().findViewById(R.id.coordinatorLayout);
+        Snackbar snackBar = Snackbar.make(view, R.string.undo_last, Snackbar.LENGTH_INDEFINITE);
+        snackBar.setAction(R.string.undo, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GiftCardLedger.get(getActivity()).deleteLatestHistoryEntry(mGiftCard);
+                mAdapter.undoAdd();
+                mBalanceTextView.setText(GiftCard.getFormattedBalance(mGiftCard.getBalance()));
+
+            }
+        });
+        snackBar.addCallback(new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                super.onDismissed(transientBottomBar, event);
+
+
+            }
+        });
+        snackBar.setDuration(6000);
+        snackBar.show();
     }
 
     /**
@@ -290,6 +316,12 @@ public class GiftCardEditFragment extends Fragment {
         @Override
         public int getItemCount() {
             return mHistory.size();
+        }
+
+        public void undoAdd(){
+            int mRecentlyAddedItemPosition = mHistory.size() - 1;
+            mHistory.remove(mRecentlyAddedItemPosition);
+            this.notifyItemRemoved(mRecentlyAddedItemPosition);
         }
 
         /*public void updateList(List<GiftCard> cards) {

@@ -4,12 +4,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import com.rickmyers.giftcardledger.database.GiftCardCursorWrapper;
+import com.rickmyers.giftcardledger.database.GiftCardDbSchema;
 import com.rickmyers.giftcardledger.database.GiftCardDbSchema.GiftCardTable;
 import com.rickmyers.giftcardledger.database.GiftCardDbSchema.HistoryTable;
 import com.rickmyers.giftcardledger.database.GiftCardDBHelper;
@@ -20,6 +23,9 @@ import com.rickmyers.giftcardledger.database.GiftCardDBHelper;
  * @author Rick Myers
  */
 public class GiftCardLedger {
+
+    // logging tag
+    private static final String TAG = "GiftCardLedger";
 
     // Only one GiftCardLedger may exist at any given time!
     private static GiftCardLedger sGiftCardLedger;
@@ -76,6 +82,64 @@ public class GiftCardLedger {
                 HistoryTable.Cols.BALANCE +
                 ")";
         mDatabase.execSQL(query);
+    }
+
+    private int getHistoryTableLastRowId(GiftCard card){
+        int id;
+
+        GiftCardCursorWrapper cursor = queryHistory(null, null, card);
+
+        try {
+            cursor.moveToLast();
+            id = cursor.getInt(0);
+         } finally {
+            cursor.close();
+        }
+
+        return id;
+    }
+
+    public void deleteLatestHistoryEntry(GiftCard card){
+
+        int id = getHistoryTableLastRowId(card);
+
+        if(id > 0){
+            mDatabase.delete(card.getHistoryTableName(), HistoryTable.Cols.ID + " = ?", new String[]{Integer.toString(id)});
+        }
+
+        revertToPreviousBalance(card);
+
+    }
+
+    private void revertToPreviousBalance(GiftCard card) {
+        String lastBalance = getLastBalance(card);
+        card.setBalance(new BigDecimal(lastBalance));
+        updateGiftCardValues(card);
+    }
+
+    private String getLastBalance(GiftCard card) {
+
+        int maxId = getHistoryTableLastRowId(card);
+
+        String whereClause = HistoryTable.Cols.ID + " = ?";
+        String[] whereArgs = new String[]{Integer.toString(maxId)};
+        GiftCardCursorWrapper cursor = queryHistory(whereClause, whereArgs, card);
+
+        // create a new list
+        List<List<String>> history = new ArrayList<>();
+
+        // try to move through rows and add history to list
+        try {
+            cursor.moveToLast();
+            history.add(cursor.getHistory());
+        } finally {
+            cursor.close();
+        }
+
+        List<String> lastHistoryEntry = history.get(0);
+        String balance = lastHistoryEntry.get(2);
+        Log.d(TAG, balance);
+        return balance;
     }
 
     /**
@@ -188,16 +252,20 @@ public class GiftCardLedger {
      * @param card the {@link GiftCard} to be updated.
      */
     public void updateGiftCard(GiftCard card) {
+        updateGiftCardValues(card);
+
+        String tableName = card.getHistoryTableName();
+        ContentValues historyValues = getHistoryContentValues(card);
+        mDatabase.insert(tableName, null, historyValues);
+    }
+
+    private void updateGiftCardValues(GiftCard card) {
         String uuidString = card.getId().toString();
         ContentValues values = getContentValues(card);
 
         mDatabase.update(GiftCardTable.NAME, values,
                 GiftCardTable.Cols.UUID + " = ?",
                 new String[]{uuidString});
-
-        String tableName = card.getHistoryTableName();
-        ContentValues historyValues = getHistoryContentValues(card);
-        mDatabase.insert(tableName, null, historyValues);
     }
 
     /**
