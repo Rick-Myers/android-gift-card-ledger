@@ -39,8 +39,11 @@ public class GiftCardCursorWrapper extends CursorWrapper {
         String balance = getString(getColumnIndex(GiftCardTable.Cols.BALANCE));
         String historyTable = getString(getColumnIndex(GiftCardTable.Cols.HISTORY_TABLENAME));
 
+        // test
+        int listPosition = getInt(getColumnIndex(GiftCardTable.Cols.LIST_POSITION));
+
         // create a card with data
-        GiftCard card = new GiftCard(name, new BigDecimal(balance), UUID.fromString(uuidString), historyTable);
+        GiftCard card = new GiftCard(name, new BigDecimal(balance), UUID.fromString(uuidString), historyTable, listPosition);
 
         return card;
     }

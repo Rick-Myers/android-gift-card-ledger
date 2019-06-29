@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -36,6 +37,7 @@ public class GiftCardAddFragment extends Fragment {
     private EditText mBalance;
     private Button mSaveButton;
     private Callbacks mCallbacks;
+    private GiftCardLedger mGiftCardLedger;
 
     public interface Callbacks{
         void onGiftCardAdded(GiftCard card);
@@ -61,6 +63,17 @@ public class GiftCardAddFragment extends Fragment {
         mCallbacks.onGiftCardAdded(card);
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mGiftCardLedger = GiftCardLedger.get(getActivity());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mGiftCardLedger = GiftCardLedger.get(getActivity());
+    }
 
     /**
      * Returns a {@link View} which contains user input fields for creating a new {@link GiftCard}
@@ -82,7 +95,8 @@ public class GiftCardAddFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mBalance.getText().length() > 0 && mName.getText() != null) {
-                    GiftCard newCard = new GiftCard(mName.getText().toString(), new BigDecimal(mBalance.getText().toString()));
+                    int rowCount = mGiftCardLedger.countDbRows();
+                    GiftCard newCard = new GiftCard(mName.getText().toString(), new BigDecimal(mBalance.getText().toString()), rowCount+1);
                     addGiftCard(newCard);
                 }
             }

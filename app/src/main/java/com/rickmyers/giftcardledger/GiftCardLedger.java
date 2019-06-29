@@ -3,6 +3,7 @@ package com.rickmyers.giftcardledger;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -12,7 +13,6 @@ import java.util.List;
 import java.util.UUID;
 
 import com.rickmyers.giftcardledger.database.GiftCardCursorWrapper;
-import com.rickmyers.giftcardledger.database.GiftCardDbSchema;
 import com.rickmyers.giftcardledger.database.GiftCardDbSchema.GiftCardTable;
 import com.rickmyers.giftcardledger.database.GiftCardDbSchema.HistoryTable;
 import com.rickmyers.giftcardledger.database.GiftCardDBHelper;
@@ -74,6 +74,11 @@ public class GiftCardLedger {
         mDatabase.insert(card.getHistoryTableName(), null, history_values);
     }
 
+    /**
+     * Creates the history table that will host transaction history for the {@link GiftCard}
+     *
+     * @param card the {@link GiftCard} that the history table will be associated with
+     */
     private void createHistoryTable(GiftCard card) {
         String query = "create table " + card.getHistoryTableName() + "(" +
                 " _id integer primary key autoincrement, " +
@@ -83,6 +88,13 @@ public class GiftCardLedger {
                 ")";
         mDatabase.execSQL(query);
     }
+
+    public int countDbRows(){
+        long rows = DatabaseUtils.queryNumEntries(mDatabase, GiftCardTable.NAME);
+
+        return (int)rows;
+    }
+
 
     private int getHistoryTableLastRowId(GiftCard card){
         int id;
@@ -141,6 +153,21 @@ public class GiftCardLedger {
         Log.d(TAG, balance);
         return balance;
     }
+
+    public void swapCardListPositions(GiftCard dragged, GiftCard target){
+        // get current card positions before swapping
+        int draggedPos = dragged.getListPosition();
+        int targetPos = target.getListPosition();
+
+        // swap the cards' list positions
+        dragged.setListPosition(targetPos);
+        target.setListPosition(draggedPos);
+
+        // update the positions in the database
+        updateGiftCardValues(dragged);
+        updateGiftCardValues(target);
+    }
+
 
     /**
      * Returns the current list of {@link GiftCard}.
@@ -281,6 +308,9 @@ public class GiftCardLedger {
         values.put(GiftCardTable.Cols.BALANCE, card.getBalance().toString());
         values.put(GiftCardTable.Cols.HISTORY_TABLENAME, card.getHistoryTableName());
 
+        //testing
+        values.put(GiftCardTable.Cols.LIST_POSITION, card.getListPosition());
+
         return values;
     }
 
@@ -293,7 +323,7 @@ public class GiftCardLedger {
     private static ContentValues getHistoryContentValues(GiftCard card) {
         ContentValues values = new ContentValues();
         values.put(HistoryTable.Cols.DATE, GiftCard.dateFormatter());
-        values.put(HistoryTable.Cols.TRANSAC, card.getLastTransac());
+        values.put(HistoryTable.Cols.TRANSAC, card.getLastTransaction());
         values.put(HistoryTable.Cols.BALANCE, card.getBalance().toString());
 
         return values;

@@ -22,8 +22,11 @@ public class GiftCardDbSchema {
             public static final String UUID = "uuid";
             public static final String NAME = "name";
             public static final String BALANCE = "balance";
-            public static final String HISTORY = "history";
+            //public static final String HISTORY = "history";
             public static final String HISTORY_TABLENAME = "history_table";
+
+            // test
+            public static final String LIST_POSITION = "list_position";
         }
     }
 

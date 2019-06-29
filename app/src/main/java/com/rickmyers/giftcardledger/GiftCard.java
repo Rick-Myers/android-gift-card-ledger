@@ -21,17 +21,33 @@ public class GiftCard {
     private BigDecimal mBalance;
     private List<List<String>> mHistory;
     private String mHistoryTableName;
-    private String mLastTransac;
+    private String mLastTransaction;
+
+    //testing
+    private int mListPosition;
 
     /**
      * Class constructor
-     */
     public GiftCard(String name, BigDecimal startBalance) {
         this(name,
                 startBalance,
                 UUID.randomUUID(),
                 "History_" + new Date().getTime());
+    }*/
+
+
+    //testing
+    /**
+     * Class constructor
+     */
+    public GiftCard(String name, BigDecimal startBalance, int listPosition) {
+        this(name,
+                startBalance,
+                UUID.randomUUID(),
+                "History_" + new Date().getTime(),
+                listPosition);
     }
+
 
     /**
      * Class constructor specifying an existing Gift card.
@@ -41,13 +57,25 @@ public class GiftCard {
      * @param id unique UUID used for identifying cards
      * @param historyTableName name of the card's transaction history table
      */
-    public GiftCard(String name, BigDecimal balance, UUID id, String historyTableName) {
+    public GiftCard(String name, BigDecimal balance, UUID id, String historyTableName, int listPosition) {
         mId = id;
         mName = name;
         mBalance = balance;
-        mLastTransac = "+" + getFormattedBalance(balance);
+        mLastTransaction = "+" + getFormattedBalance(balance);
         mHistoryTableName = historyTableName;
+
+        //testing
+        mListPosition = listPosition;
     }
+
+    public int getListPosition(){
+        return mListPosition;
+    }
+
+    public void setListPosition(int position){
+        mListPosition = position;
+    }
+
 
     /**
      * Returns date formatted.
@@ -98,8 +126,8 @@ public class GiftCard {
         {
             mBalance = new BigDecimal(0);
         }
-        mLastTransac = "-" + getFormattedBalance(value);
-        createHistoryTransaction(mLastTransac);
+        mLastTransaction = "-" + getFormattedBalance(value);
+        createHistoryTransaction(mLastTransaction);
         return mBalance;
     }
 
@@ -111,8 +139,8 @@ public class GiftCard {
      */
     public BigDecimal addToBalance(BigDecimal value){
         mBalance = mBalance.add(value);
-        mLastTransac = "+" + getFormattedBalance(value);
-        createHistoryTransaction(mLastTransac);
+        mLastTransaction = "+" + getFormattedBalance(value);
+        createHistoryTransaction(mLastTransaction);
         return mBalance;
     }
 
@@ -164,8 +192,8 @@ public class GiftCard {
         return mBalance;
     }
 
-    public String getLastTransac(){
-        return mLastTransac;
+    public String getLastTransaction(){
+        return mLastTransaction;
     }
 
     /**

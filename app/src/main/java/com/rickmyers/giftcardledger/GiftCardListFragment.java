@@ -273,11 +273,24 @@ public class GiftCardListFragment extends Fragment {
                 }
 
                 @Override
-                public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+                public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder dragged, @NonNull RecyclerView.ViewHolder target) {
 
-                    mAdapter.onItemMove(viewHolder.getAdapterPosition(), viewHolder1.getAdapterPosition());
+                    int currentPosition = dragged.getAdapterPosition();
+                    int newPosition = target.getAdapterPosition();
+
+                    //Log.d(TAG, Integer.toString(currentPosition) + " " + Integer.toString(newPosition));
+
+                    mAdapter.onItemMove(dragged.getAdapterPosition(), target.getAdapterPosition());
+
 
                     return true;
+                }
+
+                @Override
+                public void onMoved(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, int fromPos, @NonNull RecyclerView.ViewHolder target, int toPos, int x, int y) {
+                    super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y);
+
+                    //Log.d(TAG, Integer.toString(fromPos) + " " + Integer.toString(toPos));
                 }
 
                 @Override
@@ -459,13 +472,32 @@ public class GiftCardListFragment extends Fragment {
         public boolean onItemMove(int fromPosition, int toPosition){
             if (fromPosition < toPosition) {
                 for (int i = fromPosition; i < toPosition; i++) {
+                    // get cards before switching positions
+                    GiftCard dragged = mGiftCards.get(i);
+                    GiftCard target = mGiftCards.get(i + 1);
+
+                    // swap positions in the database
+                    mGiftCardLedger.swapCardListPositions(dragged, target);
+
+                    // swap the positions in the list
                     Collections.swap(mGiftCards, i, i + 1);
                 }
             } else {
                 for (int i = fromPosition; i > toPosition; i--) {
+                    // get cards before switching positions
+                    GiftCard dragged = mGiftCards.get(i);
+                    GiftCard target = mGiftCards.get(i - 1);
+
+                    // swap positions in the database
+                    mGiftCardLedger.swapCardListPositions(dragged, target);
+
+                    // swap the positions in the list
                     Collections.swap(mGiftCards, i, i - 1);
                 }
             }
+
+
+
             notifyItemMoved(fromPosition, toPosition);
             return true;
         }

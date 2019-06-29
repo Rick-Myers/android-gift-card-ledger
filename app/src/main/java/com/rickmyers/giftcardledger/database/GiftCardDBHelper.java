@@ -38,8 +38,9 @@ public class GiftCardDBHelper extends SQLiteOpenHelper {
                 GiftCardTable.Cols.UUID + ", " +
                 GiftCardTable.Cols.NAME + ", " +
                 GiftCardTable.Cols.BALANCE + ", " +
-                GiftCardTable.Cols.HISTORY + ", " +
-                GiftCardTable.Cols.HISTORY_TABLENAME +
+                //GiftCardTable.Cols.HISTORY + ", " +
+                GiftCardTable.Cols.HISTORY_TABLENAME + ", " +
+                GiftCardTable.Cols.LIST_POSITION +
                 ")"
         );
     }
