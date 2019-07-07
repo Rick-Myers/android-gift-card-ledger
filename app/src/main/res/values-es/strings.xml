@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="card_name_label">Nombre</string>
-    <string name="action_settings">Ajustes</string>
     <string name="card_name_hint">" Ingrese el nombre de la tarjeta de regalo."</string>
     <string name="card_balance_label">Equilibrar</string>
     <string name="card_balance_hint">Añadir / Deducir aquí!</string>
-    <string name="card_history_label">" Historia"</string>
-    <string name="card_number_label">" Número"</string>
-    <string name="card_number_hint">" Ingrese el número de tarjeta de regalo."</string>
     <string name="card_delete_question">" ¿Borrar?"</string>
     <string name="ok_button">" De acuerdo"</string>
     <string name="cancel_button">Cancelar</string>
     <string name="new_card">" Nueva tarjeta"</string>
     <string name="show_subtitle">" Mostrar subtitulo"</string>
-    <string name="image_preview">" Avance"</string>
     <string name="hide_subtitle">" Ocultar subtítulo"</string>
     <string name="no_data_available">" Añadir una tarjeta de regalo!"</string>
 
@@ -21,9 +16,6 @@
         <item quantity="one">%1$d tarjeta</item>
         <item quantity="other">%1$d tarjetas</item>
     </plurals>
-    <string name="card_photo_button_description">" Toma una foto de tu tarjeta de regalo."</string>
-    <string name="card_photo_no_image_description">" Foto de tarjeta de regalo (no establecida)"</string>
-    <string name="card_photo_image_description">" Foto de tarjeta de regalo (set)"</string>
     <string name="save">Salvar</string>
     <string name="transaction_label">Historial de transacciones</string>
     <string name="add">Añadir</string>
