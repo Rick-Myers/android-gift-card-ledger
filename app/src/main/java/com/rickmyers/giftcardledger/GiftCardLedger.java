@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.rickmyers.giftcardledger.database.GiftCardCursorWrapper;
+import com.rickmyers.giftcardledger.database.GiftCardDbSchema;
 import com.rickmyers.giftcardledger.database.GiftCardDbSchema.GiftCardTable;
 import com.rickmyers.giftcardledger.database.GiftCardDbSchema.HistoryTable;
 import com.rickmyers.giftcardledger.database.GiftCardDBHelper;
@@ -263,6 +264,7 @@ public class GiftCardLedger {
      */
     public void removeGiftCard(UUID id) {
         GiftCard card = getGiftCard(id);
+        int removedListPosition = card.getListPosition();
 
         //Drop the history transaction table for the card.
         String query = "DROP TABLE IF EXISTS " + card.getHistoryTableName();
@@ -271,7 +273,26 @@ public class GiftCardLedger {
         //Delete the row related to the card from the database.
         mDatabase.delete(GiftCardTable.NAME, GiftCardTable.Cols.UUID + " = ?", new String[]{id.toString()});
 
+        //Update remaining cards' list positions
+        updateCardsListPositions(removedListPosition);
+
     }
+
+    private void updateCardsListPositions(int removedListPosition){
+
+        List<GiftCard> cards = getGiftCardList();
+
+        for(GiftCard card: cards){
+            int currentPosition = card.getListPosition();
+
+            if (currentPosition > removedListPosition){
+                card.setListPosition(--currentPosition);
+            }
+
+            updateGiftCardValues(card);
+        }
+    }
+
 
     /**
      * Update a {@link GiftCard} in the database.
@@ -345,7 +366,7 @@ public class GiftCardLedger {
                 whereArgs,
                 null,
                 null,
-                null
+                GiftCardTable.Cols.LIST_POSITION
         );
         return new GiftCardCursorWrapper(cursor);
     }

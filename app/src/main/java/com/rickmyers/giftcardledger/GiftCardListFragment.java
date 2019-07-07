@@ -278,7 +278,7 @@ public class GiftCardListFragment extends Fragment {
                     int currentPosition = dragged.getAdapterPosition();
                     int newPosition = target.getAdapterPosition();
 
-                    //Log.d(TAG, Integer.toString(currentPosition) + " " + Integer.toString(newPosition));
+                    Log.d(TAG, Integer.toString(currentPosition) + " " + Integer.toString(newPosition));
 
                     mAdapter.onItemMove(dragged.getAdapterPosition(), target.getAdapterPosition());
 
