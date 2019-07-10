@@ -38,12 +38,15 @@ public class GiftCardCursorWrapper extends CursorWrapper {
         String name = getString(getColumnIndex(GiftCardTable.Cols.NAME));
         String balance = getString(getColumnIndex(GiftCardTable.Cols.BALANCE));
         String historyTable = getString(getColumnIndex(GiftCardTable.Cols.HISTORY_TABLENAME));
-
-        // test
         int listPosition = getInt(getColumnIndex(GiftCardTable.Cols.LIST_POSITION));
 
+        // test
+        int backgroundColor = getInt(getColumnIndex(GiftCardTable.Cols.BACKGROUND_COLOR));
+        int symbolColor = getInt(getColumnIndex(GiftCardTable.Cols.SYMBOL_COLOR));
+        int fontColor = getInt(getColumnIndex(GiftCardTable.Cols.FONT_COLOR));
+
         // create a card with data
-        GiftCard card = new GiftCard(name, new BigDecimal(balance), UUID.fromString(uuidString), historyTable, listPosition);
+        GiftCard card = new GiftCard(name, new BigDecimal(balance), UUID.fromString(uuidString), historyTable, listPosition, backgroundColor, symbolColor, fontColor);
 
         return card;
     }

@@ -328,9 +328,12 @@ public class GiftCardLedger {
         values.put(GiftCardTable.Cols.NAME, card.getName());
         values.put(GiftCardTable.Cols.BALANCE, card.getBalance().toString());
         values.put(GiftCardTable.Cols.HISTORY_TABLENAME, card.getHistoryTableName());
+        values.put(GiftCardTable.Cols.LIST_POSITION, card.getListPosition());
 
         //testing
-        values.put(GiftCardTable.Cols.LIST_POSITION, card.getListPosition());
+        values.put(GiftCardTable.Cols.BACKGROUND_COLOR, card.getBackgroundColor());
+        values.put(GiftCardTable.Cols.SYMBOL_COLOR, card.getSymbolColor());
+        values.put(GiftCardTable.Cols.FONT_COLOR, card.getFontColor());
 
         return values;
     }

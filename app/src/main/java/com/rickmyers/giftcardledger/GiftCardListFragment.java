@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.ActionBar;
@@ -393,6 +394,7 @@ public class GiftCardListFragment extends Fragment {
         private TextView mBalanceTextView;
         private GiftCard mGiftCard;
         private ImageView mImageView;
+        private CardView mCardView;
 
 
 
@@ -403,6 +405,8 @@ public class GiftCardListFragment extends Fragment {
             mNameTextView = itemView.findViewById(R.id.card_name);
             mBalanceTextView = itemView.findViewById(R.id.card_balance);
             mImageView = itemView.findViewById(R.id.dollar_image);
+            mCardView = itemView.findViewById(R.id.card_view);
+
         }
 
         /**
@@ -413,15 +417,19 @@ public class GiftCardListFragment extends Fragment {
         public void bind(GiftCard card) {
             mGiftCard = card;
             mNameTextView.setText(mGiftCard.getName());
+            mCardView.setCardBackgroundColor(mGiftCard.getBackgroundColor());
+            mImageView.setColorFilter(mGiftCard.getSymbolColor());
+            mBalanceTextView.setTextColor(mGiftCard.getFontColor());
+            mNameTextView.setTextColor(mGiftCard.getFontColor());
             mBalanceTextView.setText(GiftCard.getFormattedBalance(mGiftCard.getBalance()));
 
-            int test = card.getBalance().toBigInteger().intValue();
+            /*int test = card.getBalance().toBigInteger().intValue();
             if(test > 50){
                 mImageView.setColorFilter(getResources().getColor(R.color.j_green));
             } else if(test >= 25 && test <= 50){
                 mImageView.setColorFilter(getResources().getColor(R.color.j_yellow));
             } else if (test < 25)
-                mImageView.setColorFilter(getResources().getColor(R.color.j_red));
+                mImageView.setColorFilter(getResources().getColor(R.color.j_red));*/
         }
 
         @Override

@@ -22,11 +22,13 @@ public class GiftCardDbSchema {
             public static final String UUID = "uuid";
             public static final String NAME = "name";
             public static final String BALANCE = "balance";
-            //public static final String HISTORY = "history";
             public static final String HISTORY_TABLENAME = "history_table";
+            public static final String LIST_POSITION = "list_position";
 
             // test
-            public static final String LIST_POSITION = "list_position";
+            public static final String BACKGROUND_COLOR = "background_color";
+            public static final String SYMBOL_COLOR = "symbol_color";
+            public static final String FONT_COLOR = "font_color";
         }
     }
 

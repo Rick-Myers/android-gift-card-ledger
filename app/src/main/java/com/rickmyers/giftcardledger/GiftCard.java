@@ -1,5 +1,7 @@
 package com.rickmyers.giftcardledger;
 
+import android.graphics.Color;
+
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -22,9 +24,13 @@ public class GiftCard {
     private List<List<String>> mHistory;
     private String mHistoryTableName;
     private String mLastTransaction;
+    private int mListPosition;
+
 
     //testing
-    private int mListPosition;
+    private int mBackgroundColor;
+    private int mSymbolColor;
+    private int mFontColor;
 
     /**
      * Class constructor
@@ -45,8 +51,13 @@ public class GiftCard {
                 startBalance,
                 UUID.randomUUID(),
                 "History_" + new Date().getTime(),
-                listPosition);
+                listPosition,
+                Color.WHITE,
+                Color.GREEN,
+                Color.BLACK);
     }
+
+
 
 
     /**
@@ -57,15 +68,43 @@ public class GiftCard {
      * @param id unique UUID used for identifying cards
      * @param historyTableName name of the card's transaction history table
      */
-    public GiftCard(String name, BigDecimal balance, UUID id, String historyTableName, int listPosition) {
+    public GiftCard(String name, BigDecimal balance, UUID id, String historyTableName, int listPosition, int backgroundColor,  int symbolColor, int fontColor) {
         mId = id;
         mName = name;
         mBalance = balance;
         mLastTransaction = "+" + getFormattedBalance(balance);
         mHistoryTableName = historyTableName;
+        mListPosition = listPosition;
 
         //testing
-        mListPosition = listPosition;
+        mBackgroundColor = backgroundColor;
+        mSymbolColor = symbolColor;
+        mFontColor = fontColor;
+    }
+
+
+    public int getBackgroundColor() {
+        return mBackgroundColor;
+    }
+
+    public void setBackgroundColor(int backgroundColor) {
+        mBackgroundColor = backgroundColor;
+    }
+
+    public int getSymbolColor() {
+        return mSymbolColor;
+    }
+
+    public void setSymbolColor(int symbolColor) {
+        mSymbolColor = symbolColor;
+    }
+
+    public int getFontColor() {
+        return mFontColor;
+    }
+
+    public void setFontColor(int fontColor) {
+        mFontColor = fontColor;
     }
 
     public int getListPosition(){

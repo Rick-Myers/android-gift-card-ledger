@@ -3,11 +3,14 @@ package com.rickmyers.giftcardledger;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.snackbar.Snackbar;
+import com.jaredrummler.android.colorpicker.ColorPickerDialog;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,6 +49,11 @@ public class GiftCardEditFragment extends Fragment {
     private GiftCard mGiftCard;
     private Callbacks mCallbacks;
     private Button mAddDeductButton;
+
+    private Button mBackgroundColor;
+    private Button mSymbolColor;
+    private Button mFontColor;
+
     private RadioButton mAddRadioButton;
     private RadioButton mSubtractRadioButton;
     private RecyclerView mCardRecyclerView;
@@ -119,6 +127,9 @@ public class GiftCardEditFragment extends Fragment {
             }
         });
 
+        setupColors(view);
+
+
         mAddDeductButton = view.findViewById(R.id.button_update_balance);
         mAddDeductButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,11 +157,72 @@ public class GiftCardEditFragment extends Fragment {
                         showUndoSnackbar();
                     }
                 }
+
              }
         });
 
         return view;
     }
+
+    private void setupColors(View view) {
+
+
+
+
+        mBackgroundColor = view.findViewById(R.id.button_background_color);
+        mBackgroundColor.setBackgroundColor(mGiftCard.getBackgroundColor());
+        mBackgroundColor.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                ColorPickerDialog.newBuilder().setColor(mGiftCard.getBackgroundColor()).setDialogId(GiftCardPagerActivity.DIALOG_ID_BACKGROUND).show(getActivity());
+            }
+        });
+
+        mSymbolColor = view.findViewById(R.id.button_symbol_color);
+        mSymbolColor.setBackgroundColor(mGiftCard.getSymbolColor());
+        mSymbolColor.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                ColorPickerDialog.newBuilder().setColor(mGiftCard.getSymbolColor()).setDialogId(GiftCardPagerActivity.DIALOG_ID_SYMBOL).show(getActivity());
+            }
+        });
+
+        mFontColor = view.findViewById(R.id.button_font_color);
+        mFontColor.setBackgroundColor(mGiftCard.getFontColor());
+        mFontColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ColorPickerDialog.newBuilder().setColor(mGiftCard.getFontColor()).setDialogId(GiftCardPagerActivity.DIALOG_ID_FONT).show(getActivity());
+            }
+        });
+    }
+
+    public void changeColors(int color, int dialogId){
+        switch (dialogId){
+            case GiftCardPagerActivity.DIALOG_ID_BACKGROUND:
+                mBackgroundColor.setBackgroundColor(color);
+                break;
+            case GiftCardPagerActivity.DIALOG_ID_SYMBOL:
+                mSymbolColor.setBackgroundColor(color);
+                break;
+            case GiftCardPagerActivity.DIALOG_ID_FONT:
+                mFontColor.setBackgroundColor(color);
+                break;
+        }
+
+
+
+
+    }
+
+    public void changeSymbolColor(int color){
+        mSymbolColor.setBackgroundColor(color);
+    }
+
+    public void changeFontColor(int color){
+        mFontColor.setBackgroundColor(color);
+    }
+
 
     private void showUndoSnackbar(){
         View view = getActivity().findViewById(R.id.coordinatorLayout);

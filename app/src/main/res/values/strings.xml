@@ -21,6 +21,7 @@
     <string name="deduct">Deduct</string>
     <string name="undo">Undo</string>
     <string name="undo_last">Undo last transaction?</string>
+    <string name="card_color_label">Colors</string>
 
     <plurals name="subtitle_plural">
         <item quantity="one">%1$d card</item>
