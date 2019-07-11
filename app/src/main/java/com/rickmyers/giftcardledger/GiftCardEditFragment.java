@@ -215,15 +215,6 @@ public class GiftCardEditFragment extends Fragment {
 
     }
 
-    public void changeSymbolColor(int color){
-        mSymbolColor.setBackgroundColor(color);
-    }
-
-    public void changeFontColor(int color){
-        mFontColor.setBackgroundColor(color);
-    }
-
-
     private void showUndoSnackbar(){
         View view = getActivity().findViewById(R.id.coordinatorLayout);
         Snackbar snackBar = Snackbar.make(view, R.string.undo_last, Snackbar.LENGTH_INDEFINITE);
@@ -380,8 +371,5 @@ public class GiftCardEditFragment extends Fragment {
             this.notifyItemRemoved(mRecentlyAddedItemPosition);
         }
 
-        /*public void updateList(List<GiftCard> cards) {
-            mGiftCards = cards;
-        }*/
     }
 }
