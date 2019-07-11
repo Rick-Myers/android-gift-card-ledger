@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -15,6 +16,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 import com.rickmyers.giftcardledger.utilities.CustomFragmentStatePagerAdapter;
 
@@ -166,4 +168,6 @@ public class GiftCardPagerActivity extends AppCompatActivity implements GiftCard
     public void onDialogDismissed(int dialogId) {
         Log.d(TAG, "onDialogDismissed() called with: dialogId = [" + dialogId + "]");
     }
+
+
 }

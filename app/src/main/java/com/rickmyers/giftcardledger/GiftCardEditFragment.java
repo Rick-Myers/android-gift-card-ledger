@@ -209,34 +209,68 @@ public class GiftCardEditFragment extends Fragment {
                 mFontColor.setBackgroundColor(color);
                 break;
         }
+    }
+
+    public GiftCard returnCurrentCard(){
+        return mGiftCard;
+    }
+
+    public void showUndoSnackbar(){
+        View view = getActivity().findViewById(R.id.coordinatorLayout);
+        if (view == null){
+            view = getActivity().findViewById(R.id.detail_fragment_container);
+
+            Snackbar snackBar = Snackbar.make(view, R.string.undo_last, Snackbar.LENGTH_INDEFINITE);
+            snackBar.setAction(R.string.undo, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    GiftCardLedger.get(getActivity()).deleteLatestHistoryEntry(mGiftCard);
+                    mAdapter.undoAdd();
+                    mBalanceTextView.setText(GiftCard.getFormattedBalance(mGiftCard.getBalance()));
+                    GiftCardListActivity listActivity = (GiftCardListActivity) getActivity();
+                    listActivity.onGiftCardUpdated(mGiftCard);
+
+                }
+            });
+            snackBar.addCallback(new Snackbar.Callback() {
+                @Override
+                public void onDismissed(Snackbar transientBottomBar, int event) {
+                    super.onDismissed(transientBottomBar, event);
 
 
+                }
+            });
+            snackBar.setDuration(6000);
+            snackBar.show();
+        } else {
+            Snackbar snackBar = Snackbar.make(view, R.string.undo_last, Snackbar.LENGTH_INDEFINITE);
+            snackBar.setAction(R.string.undo, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    GiftCardLedger.get(getActivity()).deleteLatestHistoryEntry(mGiftCard);
+                    mAdapter.undoAdd();
+                    mBalanceTextView.setText(GiftCard.getFormattedBalance(mGiftCard.getBalance()));
+                }
+            });
+            snackBar.addCallback(new Snackbar.Callback() {
+                @Override
+                public void onDismissed(Snackbar transientBottomBar, int event) {
+                    super.onDismissed(transientBottomBar, event);
+
+
+                }
+            });
+            snackBar.setDuration(6000);
+            snackBar.show();
+        }
 
 
     }
 
-    private void showUndoSnackbar(){
-        View view = getActivity().findViewById(R.id.coordinatorLayout);
-        Snackbar snackBar = Snackbar.make(view, R.string.undo_last, Snackbar.LENGTH_INDEFINITE);
-        snackBar.setAction(R.string.undo, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GiftCardLedger.get(getActivity()).deleteLatestHistoryEntry(mGiftCard);
-                mAdapter.undoAdd();
-                mBalanceTextView.setText(GiftCard.getFormattedBalance(mGiftCard.getBalance()));
-
-            }
-        });
-        snackBar.addCallback(new Snackbar.Callback() {
-            @Override
-            public void onDismissed(Snackbar transientBottomBar, int event) {
-                super.onDismissed(transientBottomBar, event);
-
-
-            }
-        });
-        snackBar.setDuration(6000);
-        snackBar.show();
+    public void test(){
+        GiftCardLedger.get(getActivity()).deleteLatestHistoryEntry(mGiftCard);
+        mAdapter.undoAdd();
+        mBalanceTextView.setText(GiftCard.getFormattedBalance(mGiftCard.getBalance()));
     }
 
     /**

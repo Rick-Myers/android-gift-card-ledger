@@ -325,6 +325,7 @@ public class GiftCardListFragment extends Fragment {
         updateSubtitle();
     }
 
+
     /**
      * Checks if the gift card list is empty. If it is empty, displays the empty view. Otherwise,
      * displays the recycler view.

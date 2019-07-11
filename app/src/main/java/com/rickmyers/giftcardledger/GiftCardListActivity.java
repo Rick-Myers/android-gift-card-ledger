@@ -4,6 +4,11 @@ import android.content.Intent;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 
 import java.util.UUID;
 
@@ -12,7 +17,7 @@ import java.util.UUID;
  *
  * @author Rick Myers
  */
-public class GiftCardListActivity extends SingleFragmentActivity implements GiftCardListFragment.Callbacks, GiftCardEditFragment.Callbacks, GiftCardAddFragment.Callbacks {
+public class GiftCardListActivity extends SingleFragmentActivity implements GiftCardListFragment.Callbacks, GiftCardEditFragment.Callbacks, GiftCardAddFragment.Callbacks, ColorPickerDialogListener {
 
     // logging tag
     private static final String TAG = "GiftCardListActivity";
@@ -21,6 +26,11 @@ public class GiftCardListActivity extends SingleFragmentActivity implements Gift
     private static final int REQUEST_ADD = 1;
     private GiftCardLedger mGiftCardLedger;
     private int mLastSelected = -1;
+
+    // Give your color picker dialog unique IDs if you have multiple dialogs.
+    public static final int DIALOG_ID_BACKGROUND = 0;
+    public static final int DIALOG_ID_SYMBOL = 1;
+    public static final int DIALOG_ID_FONT = 2;
 
     @Override
     protected Fragment createFragment() {
@@ -129,4 +139,47 @@ public class GiftCardListActivity extends SingleFragmentActivity implements Gift
             }
         }
     }
+
+    @Override
+    public void onColorSelected(int dialogId, int color) {
+        Log.d(TAG, "onColorSelected() called with: dialogId = [" + dialogId + "], color = [" + color + "]");
+        GiftCardEditFragment editFragment = (GiftCardEditFragment) getSupportFragmentManager().findFragmentById(R.id.detail_fragment_container);
+        GiftCard card = editFragment.returnCurrentCard();
+
+        switch (dialogId) {
+            case DIALOG_ID_BACKGROUND:
+                // We got result from the dialog that is shown when clicking on the icon in the action bar.
+                Toast.makeText(GiftCardListActivity.this, "Selected Color: #" + Integer.toHexString(color), Toast.LENGTH_SHORT).show();
+                editFragment.changeColors(color, DIALOG_ID_BACKGROUND);
+                card.setBackgroundColor(color);
+                GiftCardLedger.get(this).updateGiftCardValues(card);
+                onGiftCardUpdated(card);
+
+                break;
+            case DIALOG_ID_SYMBOL:
+                // We got result from the dialog that is shown when clicking on the icon in the action bar.
+                Toast.makeText(GiftCardListActivity.this, "Selected Color: #" + Integer.toHexString(color), Toast.LENGTH_SHORT).show();
+                editFragment.changeColors(color, DIALOG_ID_SYMBOL);
+                card.setSymbolColor(color);
+                GiftCardLedger.get(this).updateGiftCardValues(card);
+                onGiftCardUpdated(card);
+
+                break;
+            case DIALOG_ID_FONT:
+                // We got result from the dialog that is shown when clicking on the icon in the action bar.
+                Toast.makeText(GiftCardListActivity.this, "Selected Color: #" + Integer.toHexString(color), Toast.LENGTH_SHORT).show();
+                editFragment.changeColors(color, DIALOG_ID_FONT);
+                card.setFontColor(color);
+                GiftCardLedger.get(this).updateGiftCardValues(card);
+                onGiftCardUpdated(card);
+
+                break;
+        }
+    }
+
+    @Override
+    public void onDialogDismissed(int dialogId) {
+        Log.d(TAG, "onDialogDismissed() called with: dialogId = [" + dialogId + "]");
+    }
+
 }
