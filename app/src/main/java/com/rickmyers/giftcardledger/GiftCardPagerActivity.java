@@ -140,7 +140,7 @@ public class GiftCardPagerActivity extends AppCompatActivity implements GiftCard
                 Toast.makeText(GiftCardPagerActivity.this, "Selected Color: #" + Integer.toHexString(color), Toast.LENGTH_SHORT).show();
                 editFragment.changeColors(color, DIALOG_ID_BACKGROUND);
                 card.setBackgroundColor(color);
-                GiftCardLedger.get(this).updateGiftCard(card);
+                GiftCardLedger.get(this).updateGiftCardValues(card);
 
                 break;
             case DIALOG_ID_SYMBOL:
@@ -148,7 +148,7 @@ public class GiftCardPagerActivity extends AppCompatActivity implements GiftCard
                 Toast.makeText(GiftCardPagerActivity.this, "Selected Color: #" + Integer.toHexString(color), Toast.LENGTH_SHORT).show();
                 editFragment.changeColors(color, DIALOG_ID_SYMBOL);
                 card.setSymbolColor(color);
-                GiftCardLedger.get(this).updateGiftCard(card);
+                GiftCardLedger.get(this).updateGiftCardValues(card);
 
                 break;
             case DIALOG_ID_FONT:
@@ -156,7 +156,7 @@ public class GiftCardPagerActivity extends AppCompatActivity implements GiftCard
                 Toast.makeText(GiftCardPagerActivity.this, "Selected Color: #" + Integer.toHexString(color), Toast.LENGTH_SHORT).show();
                 editFragment.changeColors(color, DIALOG_ID_FONT);
                 card.setFontColor(color);
-                GiftCardLedger.get(this).updateGiftCard(card);
+                GiftCardLedger.get(this).updateGiftCardValues(card);
 
                 break;
         }
