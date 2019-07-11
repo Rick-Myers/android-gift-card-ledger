@@ -307,7 +307,7 @@ public class GiftCardLedger {
         mDatabase.insert(tableName, null, historyValues);
     }
 
-    private void updateGiftCardValues(GiftCard card) {
+    public void updateGiftCardValues(GiftCard card) {
         String uuidString = card.getId().toString();
         ContentValues values = getContentValues(card);
 
@@ -389,7 +389,7 @@ public class GiftCardLedger {
                 whereArgs,
                 null,
                 null,
-                null
+                HistoryTable.Cols.ID
         );
         return new GiftCardCursorWrapper(cursor);
     }
