@@ -19,6 +19,7 @@
         android:layout_marginRight="8dp"
         android:labelFor="@+id/card_name"
         android:text="@string/card_name_label"
+        android:textColor="@color/j_dark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -50,6 +51,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_name"
         android:text="@string/card_balance_label"
+        android:textColor="@color/j_dark"
 
         />
 
@@ -79,7 +81,8 @@
         android:text="@string/card_edit_balance_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_balance" />
+        app:layout_constraintTop_toBottomOf="@+id/card_balance"
+        android:textColor="@color/j_dark"/>
 
 
 
@@ -149,6 +152,7 @@
         android:layout_marginRight="8dp"
         android:labelFor="@+id/color_choice_layout"
         android:text="@string/card_color_label"
+        android:textColor="@color/j_dark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_balance_layout" />
@@ -171,7 +175,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Background:"
+            android:text="@string/background"
+            android:textColor="@color/j_dark"
             android:paddingHorizontal="2dp"/>
 
         <Button
@@ -183,7 +188,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Symbol:"
+            android:text="@string/symbol"
+            android:textColor="@color/j_dark"
             android:paddingHorizontal="2dp"/>
 
         <Button
@@ -195,7 +201,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Font:"
+            android:text="@string/font"
+            android:textColor="@color/j_dark"
             android:paddingHorizontal="2dp"/>
 
         <Button
@@ -206,30 +213,6 @@
 
 
     </LinearLayout>
-
-    <!--<ImageView
-        android:id="@+id/card_picture"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:background="@color/j_light_grey"
-        android:contentDescription="@string/card_photo_no_image_description"
-        android:cropToPadding="true"
-        android:focusable="true"
-        android:scaleType="centerInside"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_balance_layout"/>
-
-
-    <ImageButton
-        android:id="@+id/button_take_picture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/card_photo_button_description"
-        android:src="@android:drawable/ic_menu_camera"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_picture" />-->
 
     <TextView
         android:id="@+id/transaction_label"
@@ -243,6 +226,7 @@
         android:layout_marginTop="@dimen/fab_margin"
         android:labelFor="@+id/card_balance_edit"
         android:text="@string/transaction_label"
+        android:textColor="@color/j_dark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/color_choice_layout" />

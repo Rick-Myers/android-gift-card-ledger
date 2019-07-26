@@ -22,6 +22,9 @@
     <string name="undo">Undo</string>
     <string name="undo_last">Undo last transaction?</string>
     <string name="card_color_label">Colors</string>
+    <string name="font">Font:</string>
+    <string name="symbol">Symbol:</string>
+    <string name="background">Background:</string>
 
     <plurals name="subtitle_plural">
         <item quantity="one">%1$d card</item>

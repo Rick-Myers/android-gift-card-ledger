@@ -25,4 +25,7 @@
     <string name="undo">Deshacer</string>
     <string name="undo_last">¿Deshacer la última transacción?</string>
     <string name="card_color_label">Colores</string>
+    <string name="symbol">" Símbolo:"</string>
+    <string name="font">Fuente</string>
+    <string name="background">Fondo:</string>
 </resources>
